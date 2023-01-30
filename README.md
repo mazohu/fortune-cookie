@@ -12,7 +12,7 @@ Shortly after, you are granted with a fortune of your own, from some other stran
 
 ## Contributors:
 
-- Alexia Rangel Krashenitsa (back-end)  
-- Ana-Gabriella Thomidis (front-end)  
-- Benjamin Ruddy Barrantes (front-end)  
-- Maria Hurtado (back-end)  
+- Alexia Rangel Krashenitsa (back-end)
+- Ana-Gabriella Thomidis (front-end)
+- Benjamin Ruddy Barrantes (front-end)
+- Maria Hurtado (back-end)
