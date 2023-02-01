@@ -10,7 +10,7 @@ Shortly after, you are granted with a fortune of your own, from some other stran
 
 **Find out now at [[insert future site URL here]](https://openprocessing.org/sketch/495901/)!**
 
-## Contributors:
+## Contributors
 
 - Alexia Rangel Krashenitsa (back-end)
 - Ana-Gabriella Thomidis (front-end)
