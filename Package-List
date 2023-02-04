@@ -13,5 +13,19 @@ GORM -> go get -u gorm.io/gorm
         
         removed
 
+Following https://medium.com/@anshap1719/getting-started-with-angular-and-go-setting-up-a-boilerplate-project-8c273b81aa6
 Angular -> https://angular.io/cli
         npm install -g @angular/cli
+        ng new myapp
+                > choose N for routing
+                > css
+        
+        go get github.com/codegangsta/gin
+        https://github.com/gorilla/mux -> go get -u github.com/gorilla/mux
+        https://github.com/rs/cors -> go get github.com/rs/cors
+        go get github.com/uptrace/bunrouter
+
+        DONT do this
+        Made sure we set GOPATH to D:\Documents\Github_Projects
+        originally in env variables it's %USERPROFILE%\go aka C:\alexi\go
+
