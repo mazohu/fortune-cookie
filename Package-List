@@ -1,0 +1,17 @@
+https://github.com/markbates/goth 
+https://pkg.go.dev/github.com/markbates/goth#section-readme
+GOTH -> go get github.com/markbates/goth
+        go get github.com/markbates/goth/providers/google
+        go get github.com/markbates/goth/gothic
+        get github.com/gorilla/pat 
+        
+        removed
+
+https://gorm.io/docs/
+GORM -> go get -u gorm.io/gorm
+        go get -u gorm.io/driver/sqlite
+        
+        removed
+
+Angular -> https://angular.io/cli
+        npm install -g @angular/cli
