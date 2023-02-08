@@ -10,6 +10,7 @@
 - As a site member, once logged in, I want to be able to navigate around the site through an interactive menu.
 - As a site visitor, I want to be able to view, sign-up, or login fromt he landing page.
 - As a user, I want to make sure my username and password are viable through input verification by the login.
+
 **What issues your team planned to address**
 
 **Which ones were successfully completed**
