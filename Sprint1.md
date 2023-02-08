@@ -12,7 +12,9 @@
 - As a user, I want to make sure my username and password are viable through input verification by the login.
 
 **What issues your team planned to address**
+The front-end team planned to address creating a landing page, an about the web app section, as well as creating sign in and login pages. They aso updated the routing and pre-templated UI-kit pages as necessary. The backend team planned to create a pre-existing third-party authentication system so that users could make an account. 
 
 **Which ones were successfully completed**
+Front-end succesfully addressed their planned sprint 1 tasks.
 
 **Which ones didn't and why?**
