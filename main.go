@@ -16,18 +16,18 @@
 package main
 
 import (
-  "fmt"
-  "html/template"
-  "net/http"
-  
+	"fmt"
+	"html/template"
+	"net/http"
+	
 
-  "log"
+	"log"
 
-  "github.com/gorilla/pat"
-  "github.com/markbates/goth"
-  "github.com/markbates/goth/gothic"
-  "github.com/markbates/goth/providers/google"
-  "github.com/gorilla/sessions"
+	"github.com/gorilla/pat"
+	"github.com/markbates/goth"
+	"github.com/markbates/goth/gothic"
+	"github.com/markbates/goth/providers/google"
+	"github.com/gorilla/sessions"
 
 	"github.com/spf13/viper"
 )
@@ -51,7 +51,6 @@ func main() {
 	gothic.Store = store
 
 	goth.UseProviders(
-		//google.New("our-google-client-id", "our-google-client-secret", "http://localhost:3000/auth/google/callback", "email", "profile"),
 		google.New(viper.GetString("GOOGLE_CLIENT_ID"), viper.GetString("GOOGLE_CLIENT_SECRET"), "http://localhost:3000/auth/google/callback", "email", "profile"),
 	)
 
