@@ -25,6 +25,6 @@ Front-end succesfully completed their planned sprint 1 tasks.
 
 Back end... [todo]
 
-**Which ones didn't and why?**
+## Which ones didn't and why?
 
 [todo (if necessary]
