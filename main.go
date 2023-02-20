@@ -1,18 +1,3 @@
-//* Below is me just trying to get personally made packages to work ignore it
-// package main
-
-// import (
-// 	"fmt"
-// 	//"ourProject/helper"
-// )
-
-// func main() {
-//     fmt.Println("hello world")
-// 	//helper.Help();
-// }
-
-//* Below is the start of the tutorial
-
 package main
 
 import (
@@ -64,6 +49,10 @@ func main() {
 		}
 		t, _ := template.ParseFiles("templates/success.html")
 		t.Execute(res, user)
+
+		createDatabase(user.Name, user.Email, user.UserID)
+
+		
 	})
 
 	p.Get("/auth/{provider}", func(res http.ResponseWriter, req *http.Request) {
