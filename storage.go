@@ -31,10 +31,7 @@ func createDatabase(user string, em string, uID string) {
 
 	//Initialize struct variable
 	var person People
-
-	//delete the first so its clear
-	//db.Unscoped().Delete(&person, 1)
-
+	
 	//Create
 	//db.Create(&People{Username: user, Email: em, UserID: uID, Temp: 5})
 	ourPerson := People{Username: user, Email: em, UserID: uID, Temp: 5}
@@ -54,17 +51,6 @@ func createDatabase(user string, em string, uID string) {
 
 	// Update - update temp to 10
 	//db.Model(&person).Update("Temp", 10)
-
-	
-
-	//retrieving a database by finding the ID
-	db.Debug().Where("user_id = ?", uID).First(&person)
-	//db.Debug().Select("username").Where("user_id = ?", uID).Table("people")
-
-
-	//Update - update multiple fields
-	//db.Model(&person).Updates(Storage{Username: "200", Email: "F42"}) // non-zero fields
-	//db.Model(&person).Updates(map[string]interface{}{"Price": 200, "Code": "F42"})
   
 	// Delete - PERMANANTLY delete person (by ID)
 	// db.Unscoped().Delete(&person, 1)
