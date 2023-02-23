@@ -50,7 +50,7 @@ func main() {
 		t, _ := template.ParseFiles("templates/success.html")
 		t.Execute(res, user)
 
-		createDatabase(user.Name, user.Email, user.UserID)
+		accessDatabase(user.Name, user.Email, user.UserID)
 
 		
 	})
