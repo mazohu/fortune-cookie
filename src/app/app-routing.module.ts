@@ -19,6 +19,7 @@ import { RegisterComponent } from "./views/auth/register/register.component";
 import { IndexComponent } from "./views/index/index.component";
 import { LandingComponent } from "./views/landing/landing.component";
 import { ProfileComponent } from "./views/profile/profile.component";
+import { UserhomeComponent } from "./views/auth/userhome/userhome.component";
 
 const routes: Routes = [
   // admin views
@@ -40,6 +41,7 @@ const routes: Routes = [
     children: [
       { path: "login", component: LoginComponent },
       { path: "register", component: RegisterComponent },
+      { path: "userhome", component: UserhomeComponent},
       { path: "", redirectTo: "login", pathMatch: "full" },
     ],
   },

@@ -17,6 +17,7 @@ import { TablesComponent } from "./views/admin/tables/tables.component";
 // auth views
 import { LoginComponent } from "./views/auth/login/login.component";
 import { RegisterComponent } from "./views/auth/register/register.component";
+import { UserhomeComponent } from "./views/auth/userhome/userhome.component";
 
 // no layouts views
 import { IndexComponent } from "./views/index/index.component";
@@ -84,6 +85,7 @@ import { UserDropdownComponent } from "./components/dropdowns/user-dropdown/user
     IndexComponent,
     LandingComponent,
     ProfileComponent,
+    UserhomeComponent,
   ],
   imports: [BrowserModule, AppRoutingModule],
   providers: [],
