@@ -1,3 +1,21 @@
+/*
+& Notes about Databases now that I played with it
+	- Whenever we log in, a user ID will get passed into accessDatabase
+
+	- Then, we simply ask data base to find the userID that we passed in. 
+		*result = db.Find(&person, "user_id = ?", uID)
+		And we check the result to see if it exists
+		If it does, we will move on. If it doesn't, we create a new entry
+
+	- Notice, *person is a pointer. It points to the specified database entry
+	so we can make updates when we need to. 
+		*db.First(&person, "user_id = ?", uID)
+
+	- Also mini note, although the People struct has variable names, the
+	actual column names in the database are different. I don't know why, 
+	just look at the table and not your variables.
+*/
+
 package main
 
 import (
@@ -15,7 +33,7 @@ type People struct {
 	Temp int
   }
 
-func createDatabase(user string, em string, uID string) {
+func accessDatabase(user string, em string, uID string) {
 	log.Println("Authorization successful!")
 	log.Println("Username: ", user)
 	log.Println("Email: ", em)
