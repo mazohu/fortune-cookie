@@ -31,6 +31,10 @@ type People struct {
 	Email string
 	UserID string
 	Temp int
+
+	//fid
+	//submitted a fortune
+	//when was last fortune made
   }
 
 func accessDatabase(user string, em string, uID string) {
@@ -69,10 +73,16 @@ func accessDatabase(user string, em string, uID string) {
 
 	// Update - update temp to 10
 	//db.Model(&person).Update("Temp", 10)
+
+	//Let's try to retrieve value Temp from current User, going to try scan
+	var anotherPerson People
+	db.First(&person, "user_id = ?", uID).Scan(&anotherPerson)
+	log.Println("Our temp is ", anotherPerson.Temp)
+
   
 	// Delete - PERMANANTLY delete person (by ID)
-	// db.Unscoped().Delete(&person, 1)
-	// db.Unscoped().Delete(&person, 2)
+	//db.Unscoped().Delete(&person, 1)
+	//db.Unscoped().Delete(&person, 2)
 	// db.Unscoped().Delete(&person, 3)
 	// db.Unscoped().Delete(&person, 4)
 	// db.Unscoped().Delete(&person, 5)
