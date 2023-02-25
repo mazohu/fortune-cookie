@@ -25,66 +25,87 @@ import (
   	"gorm.io/driver/sqlite"
 )
 
-type People struct {
+type Users struct {
 	gorm.Model
-	Username  string
+
+	Username  string		//General Info about the User
 	Email string
 	UserID string
-	Temp int
 
-	//fid
-	//submitted a fortune
-	//when was last fortune made
+	Fid string				//Stores the Ids of all the fortunes recieved, for history. It's in order.
+	Submitted bool			//If a fortune has been submitted by them today.
+	LastFortune string		//When the last fortune was submitted. Is used to find out if 24 hours has passed.
+
   }
 
-func accessDatabase(user string, em string, uID string) {
+func accessDatabase(username string, em string, uID string) {
 	log.Println("Authorization successful!")
-	log.Println("Username: ", user)
+	log.Println("Username: ", username)
 	log.Println("Email: ", em)
 	log.Println("UID: ", uID)
 
+	//opening the test database
 	db, err := gorm.Open(sqlite.Open("test.db"), &gorm.Config{})
 	if err != nil {
 	  panic("failed to connect database")
 	}
   
 	// Migrate the schema
-	db.AutoMigrate(&People{})
+	db.AutoMigrate(&Users{})
 
 	//Initialize struct variable
-	var person People
+	var userPointer Users
+
+	//!For Testing purposes, I'm deleting the first entry each time we restart the program
+	db.Unscoped().Delete(&userPointer, 1)
 	
 	//Create
-	//db.Create(&People{Username: user, Email: em, UserID: uID, Temp: 5})
-	ourPerson := People{Username: user, Email: em, UserID: uID, Temp: 5}
+	ourPerson := Users{Username: username, Email: em, UserID: uID, Fid: "", Submitted: false, LastFortune: "I dunno"}
 
-	result := db.Find(&person, "user_id = ?", uID)
+	//Check if we have this user in the database already, or if we need to make a new row
+	//!I made log outputs for testing purposes, but after that is the commented out version of the same thing but less code
+	result := db.Find(&userPointer, "user_id = ?", uID)
 	if (result.RowsAffected <= 0){
 		db.Create(&ourPerson)
-		log.Println("Our person wasn't found, so we made a new one")
+		log.Println("Our person wasn't found, so we made a new entry to the database")
 	} else{
 		log.Println("Our person found!")
 	}
-	
-	//Read
-  	db.First(&person, "user_id = ?", uID) // find product with integer primary key
-	log.Println(person.ID, " is my database ID")
-  	//db.First(&person, "Username = ?", "Email = ?", "UserID = ?", "5") // find person with temp = 5
 
-	// Update - update temp to 10
-	//db.Model(&person).Update("Temp", 10)
+	/* //! This is the same thing as above but less code, replace once we're sure things are ok.
+	result := db.Find(&userPointer, "user_id = ?", uID)
+	if (result.RowsAffected <= 0){
+		db.Create(&ourPerson)
+	} 
+	*/
 
 	//Let's try to retrieve value Temp from current User, going to try scan
-	var anotherPerson People
-	db.First(&person, "user_id = ?", uID).Scan(&anotherPerson)
-	log.Println("Our temp is ", anotherPerson.Temp)
+	var userStruct Users
+	db.First(&userPointer, "user_id = ?", uID).Scan(&userStruct)
+	// log.Println("Our temp is ", anotherPerson.Temp)
+	// log.Println(person.ID, " is my database ID")
 
-  
-	// Delete - PERMANANTLY delete person (by ID)
-	//db.Unscoped().Delete(&person, 1)
-	//db.Unscoped().Delete(&person, 2)
-	// db.Unscoped().Delete(&person, 3)
-	// db.Unscoped().Delete(&person, 4)
-	// db.Unscoped().Delete(&person, 5)
-	// db.Unscoped().Delete(&person, 6)
+  	
+	
 }
+
+/*
+& Unused commands that can come in handy later
+	
+	* Delete - PERMANANTLY delete person (by ID)
+	db.Unscoped().Delete(&person, 1)
+	db.Unscoped().Delete(&person, 2)
+	db.Unscoped().Delete(&person, 3)
+	db.Unscoped().Delete(&person, 4)
+	db.Unscoped().Delete(&person, 5)
+	db.Unscoped().Delete(&person, 6)
+
+	* Update - update temp to 10
+	db.Model(&person).Update("Temp", 10)
+
+	* Read what has the current user_id and store pointer to object in person
+  	db.First(&person, "user_id = ?", uID)
+
+	* Create
+	db.Create(&People{Username: user, Email: em, UserID: uID, Temp: 5})
+*/
