@@ -30,7 +30,7 @@ type Users struct {
 
 	Username  string		//General Info about the User
 	Email string
-	UserID string
+	UserID string			`gorm:"primaryKey;autoIncrement:false"`
 
 	Fid string				//Stores the Ids of all the fortunes recieved, for history. It's in order.
 	Submitted bool			//If a fortune has been submitted by them today.
@@ -57,13 +57,14 @@ func accessDatabase(username string, em string, uID string) {
 	var userPointer Users
 
 	//!For Testing purposes, I'm deleting the first entry each time we restart the program
-	db.Unscoped().Delete(&userPointer, 1)
+	// db.Unscoped().Delete(&userPointer, 1)
+	// db.Unscoped().Delete(&userPointer, 2)
 	
 	//Create
 	ourPerson := Users{Username: username, Email: em, UserID: uID, Fid: "", Submitted: false, LastFortune: "I dunno"}
 
 	//Check if we have this user in the database already, or if we need to make a new row
-	//!I made log outputs for testing purposes, but after that is the commented out version of the same thing but less code
+	//~ I made log outputs for testing purposes, but after that is the commented out version of the same thing but less code
 	result := db.Find(&userPointer, "user_id = ?", uID)
 	if (result.RowsAffected <= 0){
 		db.Create(&ourPerson)
@@ -72,7 +73,7 @@ func accessDatabase(username string, em string, uID string) {
 		log.Println("Our person found!")
 	}
 
-	/* //! This is the same thing as above but less code, replace once we're sure things are ok.
+	/*// ! This is the same thing as above but less code, replace once we're sure things are ok.
 	result := db.Find(&userPointer, "user_id = ?", uID)
 	if (result.RowsAffected <= 0){
 		db.Create(&ourPerson)
@@ -80,10 +81,15 @@ func accessDatabase(username string, em string, uID string) {
 	*/
 
 	//Let's try to retrieve value Temp from current User, going to try scan
-	var userStruct Users
-	db.First(&userPointer, "user_id = ?", uID).Scan(&userStruct)
+	db.First(&userPointer, "user_id = ?", uID).Scan(&userPointer)
+	
+	// ~ For Testing
 	// log.Println("Our temp is ", anotherPerson.Temp)
-	// log.Println(person.ID, " is my database ID")
+	// log.Println(userPointer.UserID, " is my database ID")
+	// log.Println(userPointer.Email, " is my database email")
+
+	//~ This works:
+	//db.Model(&userPointer).Update("fid", "20")
 
   	
 	
