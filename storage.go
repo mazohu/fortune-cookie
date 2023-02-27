@@ -103,7 +103,7 @@ func accessDatabase(username string, em string, uID string) {
 
 	// ~ Testing fortuneTimer
 	var hasChanged bool = false
-	userPointer.LastTime, hasChanged = checkTime(userPointer)
+	hasChanged = checkTime(userPointer)
 	log.Println("\nHas our time changed? ", hasChanged)
 
 	//Updating the database after any changes
@@ -141,10 +141,7 @@ func dataBaseTesting(username string, em string, uID string){
 	printUserDatabase(userPointer)
 
 	// ~ Testing fortuneTimer
-	var hasChanged bool = false
-	userPointer.LastTime, hasChanged = checkTime(userPointer)
-	log.Println()
-	log.Println("Has our time changed? ", hasChanged)
+	fortuneTimerTesting(userPointer)
 	
 	//updating the entries in the database
 	updateUserDatabase(userPointer, userDB)
@@ -203,6 +200,22 @@ func printUserDatabase(userPointer Users){
 	log.Println()
 	log.Println(userPointer.ID, " is my database primary key (?)")
 	
+}
+
+func fortuneTimerTesting(userPointer Users){
+	var hasChanged bool = false
+	hasChanged = checkTime(userPointer)
+
+	log.Println()
+	log.Println("Has our time changed? ", hasChanged)
+	//if the time has changed, update userPointer
+
+	if (hasChanged){
+		userPointer.LastTime = updateTime(userPointer)
+		userPointer.Submitted = true
+	} else{
+		userPointer.Submitted = false
+	}
 }
 
 

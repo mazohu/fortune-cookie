@@ -53,7 +53,7 @@ func main() {
 		t, _ := template.ParseFiles("templates/success.html")
 		t.Execute(res, user)
 
-		//& Start of testing database functions
+		//~ Start of testing database functions
 		//accessDatabase(user.Name, user.Email, user.UserID)
 		dataBaseTesting(user.Name, user.Email, user.UserID)
 	})
