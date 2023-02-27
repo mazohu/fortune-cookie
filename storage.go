@@ -28,7 +28,7 @@ package main
 import (
 	"log"
 	"time"
-	"fmt"
+	//"fmt"
 
 	"gorm.io/gorm"
   	"gorm.io/driver/sqlite"
@@ -143,7 +143,8 @@ func dataBaseTesting(username string, em string, uID string){
 	// ~ Testing fortuneTimer
 	var hasChanged bool = false
 	userPointer.LastTime, hasChanged = checkTime(userPointer)
-	log.Println("\nHas our time changed? ", hasChanged)
+	log.Println()
+	log.Println("Has our time changed? ", hasChanged)
 	
 	//updating the entries in the database
 	updateUserDatabase(userPointer, userDB)
@@ -192,16 +193,15 @@ func updateUserDatabase(userPointer Users, db *gorm.DB){
 //print function for testing! 
 func printUserDatabase(userPointer Users){
 
-	fmt.Println()
-	fmt.Println(userPointer.Username, "is my database Username")
-	fmt.Println(userPointer.UserID, "is my database UserID")
-	fmt.Println(userPointer.Email, "is my database Email")
-	fmt.Println(userPointer.Fid, "is my database Fid")
-	fmt.Println(userPointer.Submitted, " is my database Submitted")
-	fmt.Println(userPointer.LastTime, " is my database LastTime")
-	fmt.Println()
-	fmt.Println(userPointer.ID, " is my database primary key (?)")
-	fmt.Println()
+	log.Println()
+	log.Println(userPointer.Username, "is my database Username")
+	log.Println(userPointer.UserID, "is my database UserID")
+	log.Println(userPointer.Email, "is my database Email")
+	log.Println(userPointer.Fid, "is my database Fid")
+	log.Println(userPointer.Submitted, " is my database Submitted")
+	log.Println(userPointer.LastTime, " is my database LastTime")
+	log.Println()
+	log.Println(userPointer.ID, " is my database primary key (?)")
 	
 }
 

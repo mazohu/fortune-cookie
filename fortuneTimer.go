@@ -8,7 +8,8 @@ import (
 //checks if the time has changed
 func checkTime(userPointer Users)(time.Time, bool){
 	currentTime := time.Now()
-	log.Println("\nThe time is", currentTime)
+	log.Println()
+	log.Println("The current time is", currentTime)
 	
 	//~ For Testing
 	// log.Println("The year is", currentTime.Year())
@@ -24,6 +25,4 @@ func checkTime(userPointer Users)(time.Time, bool){
 		log.Println("Our days are the same, it is ", userPointer.LastTime)
 		return userPointer.LastTime, false
 	}
-
-
 }
