@@ -15,6 +15,9 @@ import (
 	"github.com/gorilla/sessions"
 
 	"github.com/spf13/viper"
+
+	//"gorm.io/gorm"
+  	//"gorm.io/driver/sqlite"
 )
 
 
@@ -50,9 +53,9 @@ func main() {
 		t, _ := template.ParseFiles("templates/success.html")
 		t.Execute(res, user)
 
-		accessDatabase(user.Name, user.Email, user.UserID)
-
-		
+		//& Start of testing database functions
+		//accessDatabase(user.Name, user.Email, user.UserID)
+		dataBaseTesting(user.Name, user.Email, user.UserID)
 	})
 
 	p.Get("/auth/{provider}", func(res http.ResponseWriter, req *http.Request) {
