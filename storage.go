@@ -110,6 +110,7 @@ func accessDatabase(username string, em string, uID string) {
 	db.Model(&userPointer).Update("fid", userPointer.Fid)
 	db.Model(&userPointer).Update("last_time", userPointer.LastTime)
 
+	log.Println(userPointer.ID, " is my database ID")
 	
 	// ~ For Testing
 	// log.Println("Our temp is ", anotherPerson.Temp)
