@@ -18,6 +18,8 @@ import { TablesComponent } from "./views/admin/tables/tables.component";
 import { LoginComponent } from "./views/auth/login/login.component";
 import { RegisterComponent } from "./views/auth/register/register.component";
 import { UserhomeComponent } from "./views/auth/userhome/userhome.component";
+import { EatCookieComponent } from './views/auth/eat-cookie/eat-cookie.component';
+import { PastFortunesComponent } from './views/auth/past-fortunes/past-fortunes.component';
 
 // no layouts views
 import { IndexComponent } from "./views/index/index.component";
@@ -48,8 +50,7 @@ import { PagesDropdownComponent } from "./components/dropdowns/pages-dropdown/pa
 import { NotificationDropdownComponent } from "./components/dropdowns/notification-dropdown/notification-dropdown.component";
 import { SidebarComponent } from "./components/sidebar/sidebar.component";
 import { UserDropdownComponent } from "./components/dropdowns/user-dropdown/user-dropdown.component";
-import { EatCookieComponent } from './eat-cookie/eat-cookie.component';
-import { PastFortunesComponent } from './past-fortunes/past-fortunes.component';
+
 
 @NgModule({
   declarations: [

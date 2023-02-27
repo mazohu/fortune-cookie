@@ -20,6 +20,8 @@ import { IndexComponent } from "./views/index/index.component";
 import { LandingComponent } from "./views/landing/landing.component";
 import { ProfileComponent } from "./views/profile/profile.component";
 import { UserhomeComponent } from "./views/auth/userhome/userhome.component";
+import { PastFortunesComponent } from "./views/auth/past-fortunes/past-fortunes.component";
+import { EatCookieComponent } from "./views/auth/eat-cookie/eat-cookie.component";
 
 const routes: Routes = [
   // admin views
@@ -42,6 +44,8 @@ const routes: Routes = [
       { path: "login", component: LoginComponent },
       { path: "register", component: RegisterComponent },
       { path: "userhome", component: UserhomeComponent},
+      { path: "eatcookie", component: EatCookieComponent},
+      { path: "pastfortunes", component: PastFortunesComponent},
       { path: "", redirectTo: "login", pathMatch: "full" },
     ],
   },
