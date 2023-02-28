@@ -1,1 +1,28 @@
-<p>past-fortunes works!</p>
+<div
+class="absolute top-0 w-full h-full bg-center bg-cover"
+style="
+  background-image: url('https://img.freepik.com/free-vector/hand-drawn-fortune-cookie-pattern_23-2149247689.jpg?w=2000');
+"
+>
+<span
+        id="blackOverlay"
+        class="w-full h-full absolute opacity-75 bg-black"
+></span> 
+
+
+<div class="container mx-auto px-4 h-full">
+    <div class="flex content-center items-center justify-center h-full">
+        <div class="flex flex-wrap mt-2">
+            <div class="w-full mb-4 px-4">
+                <app-card-table></app-card-table>
+            </div>
+        </div>
+        <div align="right">
+        <div class="relative flex min-w-0 break-words w-full mb-2" >
+            <button class="bg-red-500 text-white active:bg-red-600 font-bold uppercase text-sm px-6 py-3 rounded-full shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150" type="button" [routerLink]="['/auth/userhome']">
+                User Home
+            </button>
+        </div>
+        </div>
+    </div>
+</div>
