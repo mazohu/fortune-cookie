@@ -4,10 +4,10 @@ import (
 	//"fmt"
 	"net/http"
 	//"html/template"
-	//"log"
+	"log"
 	//"encoding/json"
-	"path"
-	"path/filepath"
+	//"path"
+	//"path/filepath"
 
 	"github.com/markbates/goth"
 	"github.com/markbates/goth/gothic"
@@ -35,7 +35,7 @@ func main() {
 
 	gothic.Store = store
 
-	goth.UseProviders(google.New(viper.GetString("GOOGLE_CLIENT_ID"), viper.GetString("GOOGLE_CLIENT_SECRET"), "http://localhost:3000/auth/google/callback", "email", "profile"))
+	goth.UseProviders(google.New(viper.GetString("GOOGLE_CLIENT_ID"), viper.GetString("GOOGLE_CLIENT_SECRET"), "http://localhost:4200/auth/google/callback", "email", "profile"))
 
 	//Configure Gin server object
 	r := gin.Default()
@@ -45,26 +45,19 @@ func main() {
 	config := cors.DefaultConfig()
  
  	config.AllowHeaders = []string{"Authorization", "content-type"}
+	//Client is open on 4200
  	config.AllowOrigins = []string{"http://localhost:4200"}
-
-	//Since Gin requires specific paths, ensures Angular files are served with specific roots
-    r.NoRoute(func(c *gin.Context) {
-        dir, file := path.Split(c.Request.RequestURI)
-        ext := filepath.Ext(file)
-        if file == "" || ext == "" {
-            c.File("./ui/dist/ui/index.html")
-        } else {
-            c.File("./ui/dist/ui/" + path.Join(dir, file))
-        }
-    })
 
 	/**------------------------------------------------------------------------
 	 *                           AUTHENTICATION
 	 *------------------------------------------------------------------------**/
 
+	//!Something with routing is severely wrong
+
 	//Redirect to third-party authentication service
 	r.GET("/auth/{provider}", func(c *gin.Context) {
 		gothic.BeginAuthHandler(c.Writer, c.Request)
+		log.Println("goth auth began")
 	})
 
 	//Validate login with third-party
@@ -82,6 +75,7 @@ func main() {
 		})
 	})
 
+	//Server listens on port 3000 => client-side requests should be made to 3000
 	err := r.Run(":3000")
 	if err != nil {
 		panic(err)
