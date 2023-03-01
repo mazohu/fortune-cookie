@@ -1,13 +1,37 @@
 # Routing
-- [Gorilla](https://github.com/gorilla) archived in Dec. 2022
-  - ~~Can use [BunRouter](https://github.com/uptrace/bunrouter) as alternative for `gorilla/mux`~~
-  - Basically all oauth packages rely on Gorilla in some capacity
-  - [Gin](https://github.com/gin-gonic/gin)
-    - [Angular/GO app using Gin](https://auth0.com/blog/developing-golang-and-angular-apps-part-1-backend-api/)
-      - Enables handlers and higher abstraction than pat
-    - [Using gorilla/pat to serve front-end](https://blog.loginradius.com/engineering/google-authentication-with-golang-and-goth/)
-# Log-in
+  - [Gorilla](https://github.com/gorilla) archived in Dec. 2022
+    - ~~Can use [BunRouter](https://github.com/uptrace/bunrouter) as alternative for `gorilla/mux`~~
+    - Basically all oauth packages rely on Gorilla in some capacity
+    - [Gin](https://github.com/gin-gonic/gin)
+      - [Angular/GO app using Gin](https://auth0.com/blog/developing-golang-and-angular-apps-part-1-backend-api/)
+        - Enables handlers and higher abstraction than pat
+      - [Using gorilla/pat to serve front-end](https://blog.loginradius.com/engineering/google-authentication-with-golang-and-goth/)
+# Observables
+  - ng HttpClient returns Observables instead of responses
+# Login
   - are user ids persistent?
+  - `User` struct returned from Goth authentication
+  ```golang
+    type User struct {
+      RawData map[string]interface{}
+      Provider  string
+      Email string
+      Name  string
+      FirstName string
+      LastName  string
+      NickName  string
+      Description string
+      UserID  string
+      AvatarURL string
+      Location  string
+      AccessToken string
+      AccessTokenSecret string
+      RefreshToken  string
+      ExpiresAt time.Time
+      IDToken string
+    }
+  ```
+  - [JWT authentication flow](https://res.cloudinary.com/practicaldev/image/fetch/s--IX-y468A--/c_limit%2Cf_auto%2Cfl_progressive%2Cq_auto%2Cw_880/https://i.imgur.com/hthWzSx.png)
 # Database
   - Packages
     - [Driver vs ORM model](https://stackoverflow.com/questions/24153067/whats-difference-between-orm-and-odbc)?
