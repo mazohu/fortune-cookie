@@ -8,9 +8,14 @@ import { OktaAuthModule } from '@okta/okta-angular';
 import oktaConfig from './okta.config';
 import { AppRoutingModule } from './app-routing.module';
 
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { AuthInterceptor } from './shared/services/auth-interceptor.service';
+import { LoginComponent } from './login/login.component';
+
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    LoginComponent
   ],
   imports: [
     BrowserModule,
@@ -18,7 +23,13 @@ import { AppRoutingModule } from './app-routing.module';
     OktaAuthModule,
     AppRoutingModule
   ],
-  providers: [],
+  providers: [
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: AuthInterceptor,
+      multi: true
+    }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
