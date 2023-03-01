@@ -1,0 +1,15 @@
+<!-- app/home/home.component.html -->
+
+<h2>
+Welcome to Go Blog App
+</h2>
+<button *ngIf="(authService.authState$ | async)!.isAuthenticated"
+color="primary"
+routerLink="/login"
+mat-raised-button
+class="login-btn">LOGIN</button>
+<button *ngIf="(authService.authState$ | async)!.isAuthenticated"
+color="primary"
+routerLink="/posts"
+mat-raised-button
+class="login-btn">VIEW BLOG</button>
