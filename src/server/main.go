@@ -1,17 +1,21 @@
 package main
 
 import (
-	"fmt"
+	//"fmt"
 	"net/http"
-	"html/template"
-	"log"
+	//"html/template"
+	//"log"
+	//"encoding/json"
+	"path"
+	"path/filepath"
 
-	"github.com/gorilla/pat"
 	"github.com/markbates/goth"
 	"github.com/markbates/goth/gothic"
 	"github.com/markbates/goth/providers/google"
 	"github.com/gorilla/sessions"
 	"github.com/spf13/viper"
+	"github.com/gin-gonic/gin"
+	"github.com/gin-contrib/cors"
 )
 
 func main() {
@@ -33,29 +37,54 @@ func main() {
 
 	goth.UseProviders(google.New(viper.GetString("GOOGLE_CLIENT_ID"), viper.GetString("GOOGLE_CLIENT_SECRET"), "http://localhost:3000/auth/google/callback", "email", "profile"))
 
-	p := pat.New()
-	//Redirect to Google sign-in
-	p.Get("/auth/{provider}/callback", func(res http.ResponseWriter, req *http.Request) {
-		user, err := gothic.CompleteUserAuth(res, req)
+	//Configure Gin server object
+	r := gin.Default()
+
+	//Use cors package to enable cross-origin resource sharing
+
+	config := cors.DefaultConfig()
+ 
+ 	config.AllowHeaders = []string{"Authorization", "content-type"}
+ 	config.AllowOrigins = []string{"http://localhost:4200"}
+
+	//Since Gin requires specific paths, ensures Angular files are served with specific roots
+    r.NoRoute(func(c *gin.Context) {
+        dir, file := path.Split(c.Request.RequestURI)
+        ext := filepath.Ext(file)
+        if file == "" || ext == "" {
+            c.File("./ui/dist/ui/index.html")
+        } else {
+            c.File("./ui/dist/ui/" + path.Join(dir, file))
+        }
+    })
+
+	/**------------------------------------------------------------------------
+	 *                           AUTHENTICATION
+	 *------------------------------------------------------------------------**/
+
+	//Redirect to third-party authentication service
+	r.GET("/auth/{provider}", func(c *gin.Context) {
+		gothic.BeginAuthHandler(c.Writer, c.Request)
+	})
+
+	//Validate login with third-party
+	r.GET("/callback", func(c *gin.Context) {
+		user, err := gothic.CompleteUserAuth(c.Writer, c.Request)
 		if err != nil {
-		fmt.Fprintln(res, err)
-		return
+			c.AbortWithError(http.StatusInternalServerError, err)
+			return
 		}
-		log.Println("Authorization successful!")
-		log.Println("Username: ", user.Name)
-		log.Println("Email: ", user.Email)
-		log.Println("UID: ", user.UserID)
-
+		c.JSON(http.StatusOK, gin.H{
+			"message": "Authentication successful",
+			"id": user.UserID,
+			"email" : user.Email,
+			"name" : user.Name,
+		})
 	})
 
-	p.Get("/auth/{provider}", func(res http.ResponseWriter, req *http.Request) {
-		gothic.BeginAuthHandler(res, req)
-	})
-
-	p.Get("/", func(res http.ResponseWriter, req *http.Request) {
-		t, _ := template.ParseFiles("../index.html")
-		t.Execute(res, false)
-	})
-	log.Println("listening on localhost:3000")
-	log.Fatal(http.ListenAndServe(":3000", p))
+	err := r.Run(":3000")
+	if err != nil {
+		panic(err)
+	}
+	/*---------------------------- END OF AUTH ROUTING ----------------------------*/
 }
