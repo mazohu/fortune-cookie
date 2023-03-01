@@ -15,9 +15,6 @@ import (
 	"github.com/gorilla/sessions"
 
 	"github.com/spf13/viper"
-
-	//"gorm.io/gorm"
-  	//"gorm.io/driver/sqlite"
 )
 
 
