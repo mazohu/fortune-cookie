@@ -21,7 +21,7 @@ Having passed this component-mounting test, we now are able to expand onto large
 
 Additionally, we can now take steps to start setting up end-to-end testing in the future.
 
-app/src/home/home.component.cy.ts
+[app/src/home/home.component.cy.ts]
 
 ### Back-end
 [storage.go](https://github.com/mazohu/fortune-cookie/blob/alexia-5/storage.go)
