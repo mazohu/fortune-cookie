@@ -53,6 +53,12 @@ import { UserDropdownComponent } from "./components/dropdowns/user-dropdown/user
 
 //For sending and receiving over http
 import { HttpClientModule } from '@angular/common/http';
+import { SocialLoginModule, SocialAuthServiceConfig } from '@abacritt/angularx-social-login';
+import {
+  GoogleLoginProvider,
+  FacebookLoginProvider
+} from '@abacritt/angularx-social-login';
+import {AuthGuardService} from './auth-guard.service';
 
 @NgModule({
   declarations: [
@@ -94,8 +100,20 @@ import { HttpClientModule } from '@angular/common/http';
     EatCookieComponent,
     PastFortunesComponent,
   ],
-  imports: [BrowserModule, AppRoutingModule, HttpClientModule],
-  providers: [],
+  imports: [BrowserModule, AppRoutingModule, HttpClientModule, SocialLoginModule],
+  providers: [{
+    provide: 'SocialAuthServiceConfig',
+    useValue: {
+      autoLogin: true, //keeps the user signed in
+      providers: [
+        {
+          id: GoogleLoginProvider.PROVIDER_ID,
+          provider: new GoogleLoginProvider('500279149044-eaksv19ivqn58aabvkmmkad2vqutqqm3.apps.googleusercontent.com') // your client id
+        }
+      ]
+    }
+  },
+    AuthGuardService],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

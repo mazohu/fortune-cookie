@@ -6,7 +6,7 @@
   "license": "MIT",
   "scripts": {
     "ng": "ng",
-    "start": "set NODE_OPTIONS=--max-old-space-size=8192 --openssl-legacy-provider && ng serve -o && cd src/server && go run main.go",
+    "start": "set NODE_OPTIONS=--max-old-space-size=8192 --openssl-legacy-provider && ng serve -o",
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",

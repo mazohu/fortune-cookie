@@ -3,6 +3,9 @@ import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { environment } from "src/environments/environment"
 import { Injectable } from "@angular/core";
+import {GoogleLoginProvider, SocialAuthService} from '@abacritt/angularx-social-login';
+
+
 @Injectable({
   providedIn: "root",
 })
@@ -13,12 +16,13 @@ import { Injectable } from "@angular/core";
 })
 export class LoginComponent implements OnInit {
   constructor(
-    private httpClient: HttpClient,
-    private router: Router
+    private router: Router,
+    private socialAuthService: SocialAuthService
   ) {}
 
   googleLogin(){
-    return this.httpClient.get(environment.gateway + '/auth/google')
+    this.socialAuthService.signIn(GoogleLoginProvider.PROVIDER_ID)
+      .then(() => this.router.navigate(['mainpage']));
   }
 
   ngOnInit(): void {}
