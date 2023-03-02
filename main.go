@@ -10,6 +10,7 @@ import (
 	"github.com/auth0-community/go-auth0"
 	"github.com/gin-gonic/gin"
 	jose "gopkg.in/square/go-jose.v2"
+	"github.com/spf13/viper"
 
 	"todo/handlers"
 )
@@ -49,12 +50,14 @@ func main() {
 }
 
 func setAuth0Variables() {
-	audience = os.Getenv("AUTH0_API_IDENTIFIER")
-	domain = os.Getenv("AUTH0_DOMAIN")
+	viper.SetConfigFile(".env")
+	viper.ReadInConfig()
+	audience = viper.GetString("AUTH0_API_IDENTIFIER")
+	domain = viper.GetString("AUTH0_DOMAIN")
 }
 
 // ValidateRequest will verify that a token received from an http request
-// is valid and signyed by Auth0
+// is valid and signed by Auth0
 func authRequired() gin.HandlerFunc {
 	return func(c *gin.Context) {
 
