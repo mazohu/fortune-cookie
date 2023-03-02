@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"path"
 	"path/filepath"
+	// "os" (commented out for ben to use cause i still dont know how to use viper1)
 
 	"github.com/auth0-community/go-auth0"
 	"github.com/gin-gonic/gin"
@@ -53,6 +54,8 @@ func setAuth0Variables() {
 	viper.ReadInConfig()
 	audience = viper.GetString("AUTH0_API_IDENTIFIER")
 	domain = viper.GetString("AUTH0_DOMAIN")
+	// audience = os.Getenv("AUTH0_CLIENT_ID")
+	// domain = os.Getenv("AUTH0_DOMAIN")
 }
 
 // ValidateRequest will verify that a token received from an http request
