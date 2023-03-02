@@ -69,14 +69,15 @@ func dataBaseTesting(username string, em string, uID string){
 	printUserDatabase(userPointer)
 
 	// ~ Testing fortuneTimer
-	fortuneTimerTesting(userPointer)
+	userPointer = fortuneTimerTesting(userPointer)
 	
 	//updating the entries in the database
 	updateUserDatabase(userPointer, userDB)
 
-	printUserDatabase(userPointer)
+	//printUserDatabase(userPointer)
 
-	//deleteRow(userPointer, 2, userDB)
+	//userDB.Unscoped().Delete(&userPointer, 1)
+	//userDB.Unscoped().Delete(&userPointer, 2)
 }
 
 //for accessing the user pointer
@@ -134,17 +135,19 @@ func printUserDatabase(userPointer Users){
 
 //deleting one to see if primary keys work
 func deleteRow(userPointer Users, theID uint, db *gorm.DB){
+	//pointer has to point to the id for this to work
 	db.Unscoped().Delete(&userPointer, theID)
 }
 
 
 //For testing the fortuneTimer
-func fortuneTimerTesting(userPointer Users){
-	submittedCheck(userPointer)
+func fortuneTimerTesting(userPointer Users) (Users){
+	userPointer = submittedCheck(userPointer)
+	return userPointer
 }
 
 //will check if the date has changed and updates Submitted Accordingly
-func submittedCheck(userPointer Users){
+func submittedCheck(userPointer Users) (Users){
 	var hasChanged bool = false
 	hasChanged = checkTime(userPointer)
 
@@ -158,6 +161,8 @@ func submittedCheck(userPointer Users){
 	} else{
 		userPointer.Submitted = true
 	}
+
+	return userPointer
 }
 
 //Will update LastTime and Submitted, for when a fortune is submitted

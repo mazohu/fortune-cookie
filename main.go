@@ -38,6 +38,8 @@ func main() {
 		google.New(viper.GetString("GOOGLE_CLIENT_ID"), viper.GetString("GOOGLE_CLIENT_SECRET"), "http://localhost:3000/auth/google/callback", "email", "profile"),
 	)
 
+	//fmt.Println(viper.GetString("GOOGLE_CLIENT_ID"))
+
 	p := pat.New()
 	p.Get("/auth/{provider}/callback", func(res http.ResponseWriter, req *http.Request) {
 
