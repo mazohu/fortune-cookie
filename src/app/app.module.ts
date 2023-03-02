@@ -1,3 +1,6 @@
+require('dotenv').config()
+console.log(process.env)
+
 import { BrowserModule } from "@angular/platform-browser";
 import { NgModule } from "@angular/core";
 
@@ -54,6 +57,11 @@ import { UserDropdownComponent } from "./components/dropdowns/user-dropdown/user
 //For sending and receiving over http
 import { HttpClientModule } from '@angular/common/http';
 
+import { ReactiveFormsModule } from '@angular/forms';
+
+import { SocialLoginModule, SocialAuthServiceConfig } from '@abacritt/angularx-social-login';
+import { GoogleLoginProvider } from '@abacritt/angularx-social-login';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -94,8 +102,23 @@ import { HttpClientModule } from '@angular/common/http';
     EatCookieComponent,
     PastFortunesComponent,
   ],
-  imports: [BrowserModule, AppRoutingModule, HttpClientModule],
-  providers: [],
+  imports: [BrowserModule, AppRoutingModule, HttpClientModule, ReactiveFormsModule, SocialLoginModule],
+  providers: [
+    {
+      provide: 'SocialAuthServiceConfig',
+      useValue: {
+        autoLogin: false,
+        providers: [
+          {
+            id: GoogleLoginProvider.PROVIDER_ID,
+            provider: new GoogleLoginProvider(
+              process.env.GOOGLE_CLIENT_ID
+            )
+          }
+        ]
+      } as SocialAuthServiceConfig,
+    }   
+  ],
   bootstrap: [AppComponent],
 })
 export class AppModule {}
