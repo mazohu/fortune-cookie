@@ -5,7 +5,8 @@ Example app taken from auth0.com \(pts [1](https://auth0.com/blog/developing-gol
 # Demoing the app
 ## Client
 Paste the following commands in a new terminal
-```cd ui \
+```
+cd ui \
 npm install \
 $env:NODE_OPTIONS="--openssl-legacy-provider" \
 npm install http-server -g \
@@ -14,6 +15,7 @@ http-server dist/ui
 ```
 ## Server
 Paste the following commands in a new terminal
-```cd .. \
+```
+cd .. \
 go run main.go
 ```
