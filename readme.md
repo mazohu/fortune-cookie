@@ -1,7 +1,19 @@
-# Develop To-Do App with Golang and Angular series
+# Credit
 
-Application repo accompanying this Auth0 blog series. In this series, you will learn how to build modern applications with Golang and Angular.
+Example app taken from auth0.com \(pts [1](https://auth0.com/blog/developing-golang-and-angular-apps-part-1-backend-api/) & [2](https://auth0.com/blog/developing-golang-and-angular-apps-part-2-angular-front-end/)\)
 
-[Part 1 - The Backend - Developing and Securing Golang APIs](https://auth0.com/blog/developing-golang-and-angular-apps-part-1-backend-api/)
-
-[Part 2 - The Front-end - Developing and Securing Angular Apps](https://auth0.com/blog/developing-golang-and-angular-apps-part-2-angular-front-end/)
+# Demoing the app
+## Client
+Paste the following commands in a new terminal
+```cd ui \
+npm install \
+$env:NODE_OPTIONS="--openssl-legacy-provider" \
+npm install http-server -g \
+ng build --prod \
+http-server dist/ui
+```
+## Server
+Paste the following commands in a new terminal
+```cd .. \
+go run main.go
+```
