@@ -5,7 +5,7 @@ describe('HomeComponent', () => {
     cy.mount(HomeComponent)
   })
 
-  it('default to 0', () => {
+  it('default', () => {
     cy.mount(HomeComponent)
     cy.get('span').should('have.text', 'Show me my fortunes!')
   })
