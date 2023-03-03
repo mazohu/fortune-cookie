@@ -1,4 +1,22 @@
-<div
+<div class="absolute top-0 w-full h-full bg-center bg-cover"
+style="
+  background-image: url('https://img.freepik.com/free-vector/hand-drawn-fortune-cookie-pattern_23-2149247689.jpg?w=2000');
+"
+>
+<span
+        id="blackOverlay"
+        class="w-full h-full absolute opacity-75 bg-black"
+></span>  
+
+<asl-google-signin-button *ngIf="!user"> </asl-google-signin-button>
+<div *ngIf="user">
+  <img src="{{ user.photoUrl }}" referrerpolicy="no-referrer">
+  <div>
+    <h4>{{ user.name }}</h4>
+    <p>{{ user.email }}</p>
+  </div> 
+</div>
+<!-- <div
 class="absolute top-0 w-full h-full bg-center bg-cover"
 style="
   background-image: url('https://img.freepik.com/free-vector/hand-drawn-fortune-cookie-pattern_23-2149247689.jpg?w=2000');
@@ -107,4 +125,4 @@ style="
       </div>
     </div>
   </div>
-</div>
+</div> -->
