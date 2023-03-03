@@ -29,11 +29,11 @@
     "chart.js": "2.9.4",
     "rxjs": "6.6.6",
     "tailwindcss": "^2.2.19",
-    "zone.js": "0.11.4"
+    "zone.js": "~0.11.4"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "^15.2.1",
-    "@angular/cli": "11.2.4",
+    "@angular/cli": "12.2.18",
     "@angular/compiler-cli": "15.2.1",
     "@angular/language-service": "15.2.1",
     "@types/jasmine": "3.6.6",
