@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { SocialAuthService } from "@abacritt/angularx-social-login";
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -11,7 +12,7 @@ export class LoginComponent {
   user:any;
   loggedIn:any;
 
-  constructor(private authService: SocialAuthService){}
+  constructor(private authService: SocialAuthService, private router: Router){}
 
   ngOnInit(){
     this.authService.authState.subscribe((user) => {
@@ -19,5 +20,9 @@ export class LoginComponent {
       this.loggedIn = (user != null);
       console.log(this.user)
     });
+  }
+
+  navigate(){
+    this.router.navigate(['/userpage'])
   }
 }
