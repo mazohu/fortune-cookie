@@ -1,0 +1,17 @@
+<!-- Below is a special google sign in button. See, *ngIf is like an if statement. It says
+      to show up if user is NOT signed in. The <dev> afterwards is the condition if the user
+      IS signed in. 
+-->
+
+<asl-google-signin-button *ngIf="!user">
+    Sign in with Google by Pressing this Cool Button
+  </asl-google-signin-button>
+  
+  <div *ngIf="user">
+    <img src="{{ user.photoUrl }}">
+    <div>
+      <h4>{{ user.name }}</h4>
+      <p>{{ user.email }}</p>
+      <p>{{ user.id }}</p>
+    </div>
+  </div>

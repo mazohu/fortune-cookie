@@ -6,12 +6,15 @@ import {
   GoogleLoginProvider,
 } from '@abacritt/angularx-social-login';
 
-import { AppRoutingModule } from './app-routing.module';
+//routingComponents will automatically import all the components we rout to. All we need to do is update this list
+import { AppRoutingModule, routingComponents } from './app-routing.module';
 import { AppComponent } from './app.component';
+
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    routingComponents
   ],
   imports: [
     BrowserModule,
@@ -27,14 +30,6 @@ import { AppComponent } from './app.component';
           {
             id: GoogleLoginProvider.PROVIDER_ID,
             provider: new GoogleLoginProvider(
-                
-              // let clientID: string
-              // if (process.env.GOOGLE_CLIENT_ID) 
-              // {
-              //   clientID = process.env.GOOGLE_CLIENT_ID
-              // } else {
-              //   throw new Error("GOOGLE_CLIENT_ID environment variable is not set")
-              // }
               '152384338353-hbdhivcu978k31fsq9d9fnsjvgaktkk1.apps.googleusercontent.com'
             )
           },

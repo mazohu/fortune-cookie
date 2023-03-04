@@ -1,16 +1,9 @@
-<!-- Below is a special google sign in button. See, *ngIf is like an if statement. It says
-      to show up if user is NOT signed in. The <dev> afterwards is the condition if the user
-      IS signed in.
---> 
-<asl-google-signin-button *ngIf="!user">
-  Sign in with Google by Pressing this Cool Button
-</asl-google-signin-button>
+<!-- NOTE: app.component will always be called first! 
+    Everything that appears here will be shown first and will remain on screen forever. 
+    This is why a homepage is necessary.
 
-<div *ngIf="user">
-  <img src="{{ user.photoUrl }}">
-  <div>
-    <h4>{{ user.name }}</h4>
-    <p>{{ user.email }}</p>
-    <p>{{ user.id }}</p>
-  </div>
-</div>
+    Our homepage has been set to '' so it should automatically route to homepage when its just localhost:4200
+--> 
+
+<router-outlet></router-outlet>
+<!-- Since we are routing to another homepage, the above command is absolutely necessary --> 
