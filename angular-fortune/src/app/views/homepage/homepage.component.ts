@@ -12,7 +12,7 @@ export class HomepageComponent {
   message = '';
   messages = [];
 
-  //constructor(private http: HttpClient) {}
+  // constructor(private http: HttpClient) {}
 
   // ngOnInit(): void {
   //   Pusher.logToConsole = true;
@@ -27,10 +27,10 @@ export class HomepageComponent {
   //   });
   // }
 
-  // submit(): void {
-  //   this.http.post('http://localhost:8000/api/messages', {
-  //     username: this.username,
-  //     message: this.message
-  //   }).subscribe(() => this.message = '');
-  // }
+  submit(): void {
+    // this.http.post('http://localhost:8000/api/messages', {
+    //   username: this.username,
+    //   message: this.message
+    // }).subscribe(() => this.message = '');
+  }
 }

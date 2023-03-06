@@ -21,6 +21,9 @@
         </div>
       </div>
     </div>
+    <form (submit)="submit()">
+      <input class="form-control" placeholder="Write a message" [(ngModel)]="message"/>
+    </form>
   </div>
   
   <nav>
