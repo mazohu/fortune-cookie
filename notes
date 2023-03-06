@@ -1,7 +1,0 @@
-A small description for packages used in below code
-
-gorilla/pat: A lightweight HTTP router for Go
-markbates/goth: Multi-Provider Authentication Package for Go
-gorilla/sessions: To save information from google in session and use it on the success page
-markbates/goth/providers/google: Google authentication provider by Goth
-html/template: Go package to parse Html files
