@@ -15,7 +15,15 @@ import (
   "fmt"
 )
 
+type Temp struct {
+  username string
+  message string
+}
+
 func main() {
+
+  temporary := Temp{username: " ", message: " "}
+
 	app := fiber.New()
 
 	app.Use(cors.New())
@@ -41,9 +49,17 @@ func main() {
       fmt.Println(err.Error())
     }
 
+    //remove later
+    for key, value := range data {
+      temporary.username = key
+      temporary.message = value
+    }
+
 		return c.JSON([]string{})
 	})
 
+  //remove later
+  fmt.Println("We have username", temporary.username, "and message", temporary.message)
   
   //* Front end and Back end runs on different ports
   //This needs to be the case for front end to request from backend. 

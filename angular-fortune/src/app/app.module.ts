@@ -23,7 +23,7 @@ import { HttpClientModule } from '@angular/common/http';
     AppRoutingModule,
     SocialLoginModule,
     FormsModule,
-    HttpClientModule
+    HttpClientModule,
   ],
   providers: [
     {
@@ -44,6 +44,7 @@ import { HttpClientModule } from '@angular/common/http';
       } as SocialAuthServiceConfig,
     }
   ],
+  
   bootstrap: [AppComponent]
 })
 export class AppModule { }
