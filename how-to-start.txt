@@ -1,0 +1,9 @@
+Two terminals:
+
+1)  cd angular-fortune
+    ng server
+
+2)  cd back-end
+    go run .
+
+And keep those terminals running!
