@@ -43,7 +43,7 @@ type Users struct {
 
 	Fid string				//Stores the Ids of all the fortunes recieved, for history. It's in order.
 	Submitted bool			//If a fortune has been submitted by them today.
-	LastTime time.Time			//When the last fortune was submitted. Is used to find out if 24 hours has passed.
+	LastTime time.Time		//When the last fortune was submitted. Is used to find out if 24 hours has passed.
 
   }
 

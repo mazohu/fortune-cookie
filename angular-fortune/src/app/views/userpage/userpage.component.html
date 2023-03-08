@@ -1,5 +1,6 @@
     <div *ngIf="!user">
         <h4>Sign in with Google first by Navigating to login</h4>
+        <p>{{ loggedIn }}</p>
     </div>
   
     <div *ngIf="user">
@@ -8,5 +9,6 @@
         <h4>{{ user.name }}</h4>
         <p>{{ user.email }}</p>
         <p>{{ user.id }}</p>
+        <p>{{ loggedIn }}</p>
         </div>
     </div>
