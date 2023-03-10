@@ -31,6 +31,13 @@ type Temp struct {
 	LastTime time.Time  `json:"lasttime"`		//When the last fortune was submitted. Is used to find out if 24 hours has passed.
 }
 
+type anotherTemp struct {
+  //this is a one time declaration, just to be sent to frontend
+  Fid string          `json:"fid"`				//Stores the Ids of all the fortunes recieved, for history. It's in order.
+	Submitted bool      `json:"submitted"`	//If a fortune has been submitted by them today.
+	LastTime time.Time  `json:"lasttime"`		//When the last fortune was submitted. Is used to find out if 24 hours has passed.
+}
+
 func main() {
 
   //opening the test database
@@ -78,7 +85,7 @@ func main() {
 
   //This is how we add to the database
   app.Post("/api/user/populate", func(c *fiber.Ctx) error {
-    ourPerson := Temp{Username: "username", Email: "em", UserID: "uID", Fid: "", Submitted: false, LastTime: time.Date(2002, time.January, 1, 23, 0, 0, 0, time.UTC)}
+    ourPerson := Temp{Username: "username", Email: "em", UserID: "uID", Fid: "", Submitted: true, LastTime: time.Date(2002, time.January, 1, 23, 0, 0, 0, time.UTC)}
 
     if err := c.BodyParser(&ourPerson); err != nil {
 			return err
@@ -103,13 +110,29 @@ func main() {
 	})
 
   //This is how we show what's in the database to the frontend
-  app.Get("/api/user/frontend", func(c *fiber.Ctx) error {
+  app.Get("/api/user/frontend/fid", func(c *fiber.Ctx) error {
 
-    //Setting the pointer so it can retrieve the userID and also update the database
-    db.First(&userPointer, "user_id = ?", "uID").Scan(&userPointer)
+    // //Setting the pointer so it can retrieve the userID and also update the database
+    // db.First(&userPointer, "user_id = ?", "uID").Scan(&userPointer)
 
     //sending the information over by json-ing the pointer info
-    return c.JSON(userPointer)
+    return c.JSON(userPointer.Fid)
+
+	})
+
+   //This is how we show what's in the database to the frontend
+   app.Get("/api/user/frontend/submitted", func(c *fiber.Ctx) error {
+
+    //sending the information over by json-ing the pointer info
+    return c.JSON(userPointer.Submitted)
+
+	})
+
+   //This is how we show what's in the database to the frontend
+   app.Get("/api/user/frontend/lastTime", func(c *fiber.Ctx) error {
+
+    //sending the information over by json-ing the pointer info
+    return c.JSON(userPointer.LastTime)
 
 	})
   

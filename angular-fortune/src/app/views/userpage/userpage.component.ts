@@ -11,14 +11,15 @@ import {HttpClient} from "@angular/common/http";
   styles: [
   ]
 })
+
 export class UserpageComponent{
 
   user:any;
   loggedIn:any;
 
   //username, email, and id is all contained in user above
-  fid : any = '';
-  submitted : any = '';
+  fid : string[] = [];
+  submitted : boolean = false;
   lasttime : any = '';
 
   //this username is FAKE don't even think about it
@@ -34,9 +35,6 @@ export class UserpageComponent{
       this.loggedIn = (user != null);
       console.log(this.user)
     });
-
-    //Enable pusher logging - don't include this in production
-    //Pusher.logToConsole = true;
 
     const pusher = new Pusher('a621a1a5218dda4b051a', {
       cluster: 'us2'
@@ -68,15 +66,27 @@ export class UserpageComponent{
   }
 
   submit(): void {
-    this.http.post('http://localhost:8000/api/messages', {
-      //When submit is called, it will sent this usename and message to the backend. 
-      username: this.username,
-      message: this.message
-    }).subscribe();
-  }
 
-  changeFn(e : any) {
-    this.message = e.target.value;
-  }
+    //will get the variables from backend. res is the response
+    this.http.get('http://localhost:8000/api/user/frontend/fid').subscribe(
+      (data : any) => {
+        this.fid.push(data);
+      }
+    );
 
+    //will get the variables from backend. res is the response
+    this.http.get('http://localhost:8000/api/user/frontend/submitted').subscribe(
+      (data : any) => {
+        this.submitted = data;
+      }
+    );
+
+    //will get the variables from backend. res is the response
+    this.http.get('http://localhost:8000/api/user/frontend/lastTime').subscribe(
+      (data : any) => {
+        this.lasttime = data;
+      }
+    );
+
+  }
 }
