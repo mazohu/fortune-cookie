@@ -12,8 +12,8 @@
         <p>{{ loggedIn }}</p>
         </div>
         <div>
-            <button type="button" (click)="submit()">
-                Click this button to pretend you're submitting a fortune
+            <button type="button" (click)="getData()">
+                Click this button to get info from the database about this user (Just as an example)
             </button>
             <p>for your information, submitted is... {{ submitted }}</p>
         </div>
@@ -24,6 +24,12 @@
             </div>
             <p>submitted is {{ submitted }}</p>
             <p>last time is {{ lasttime }}</p>
+        </div>
+        <div>
+            <button type="button" (click)="submit()">
+                Click this button to pretend you're submitting a fortune
+            </button>
+            <p>for your information, the fortune we have stored is... {{ newFortune }}</p>
         </div>
     </div>
 

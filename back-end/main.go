@@ -14,6 +14,7 @@ import (
 
   "fmt"
   "log"
+  "reflect"
 
   //these should be temporary
   "gorm.io/gorm"
@@ -81,7 +82,7 @@ func main() {
 
   //This is how we add to the database
   app.Post("/api/user/populate", func(c *fiber.Ctx) error {
-    ourPerson := Users{Username: "username", Email: "em", UserID: "uID", Fid: "", Submitted: true, LastTime: time.Date(2002, time.January, 1, 23, 0, 0, 0, time.UTC)}
+    ourPerson := Users{Username: "username", Email: "em", UserID: "uID", Fid: "hello", Submitted: true, LastTime: time.Date(2002, time.January, 1, 23, 0, 0, 0, time.UTC)}
 
     if err := c.BodyParser(&ourPerson); err != nil {
 			return err
@@ -104,6 +105,69 @@ func main() {
     //if the fortune has been submitted today or not. If not, update
     //userPointer = submittedCheck(userPointer)
     //db.Model(&userPointer).Update("submitted", userPointer.Submitted)
+
+    return c.JSON(fiber.Map{
+      "message": "success!",
+    })
+
+	})
+
+  //This is how to submit a fortune to the fortune database
+  app.Post("/api/user/submitFortune", func(c *fiber.Ctx) error {
+
+    //temporary struct for recieving information
+    newFortune := struct {
+      Text string   `json:"newfortune"`
+    }{}
+
+    if err := c.BodyParser(&newFortune); err != nil {
+			return err
+		}
+
+    //Recieving the username, email, and userID info from frontend and putting it into our struct
+		err := pusherClient.Trigger("userpage", "submitFortune", newFortune)
+    if err != nil {
+      fmt.Println(err.Error())
+    }
+    log.Println("The type of the fortune", reflect.TypeOf(newFortune.Text))
+
+
+    log.Println("This is the new fortune:", newFortune.Text)
+    log.Println("This is what is before stored inside:", userPointer.Fid)
+    //db.First(&userPointer, "user_id = ?", temp.UserID).Scan(&userPointer)
+
+    var tempList = userPointer.Fid
+    log.Println("This is tempList:", tempList)
+    if (tempList == ""){
+      //if the list is empty, this is the first entry
+      userPointer.Fid = newFortune.Text
+    }else{
+      tempList = userPointer.Fid + "," + newFortune.Text
+      userPointer.Fid = tempList
+    }
+
+    log.Println("This is my user:", userPointer.Username)
+    log.Println("This is what is now stored inside:", userPointer.Fid)
+
+    //update the database to reflect these changes
+    db.Model(&userPointer).Where("user_id", userPointer.UserID).Update("fid", userPointer.Fid)
+
+    /*
+    !So what would ACTUALLY happen?
+    Basically, we'd get the string, we'd give it an id by submitting it to the fortune database. That's all. 
+    The reason I have this program act this way is because I want to check that the values submitted are correct
+      - I think the Fids should be incremented like 1, 2, 3, so on.
+      - So when the new fortune is submitted, it gets the next number
+      - Make sure to include in the row the userid and content
+    !So when do I add an Fid to the current user? 
+    When recieving a fortune, 
+      - we get the random id number
+      - check if the user id is not the current user
+      - check that the fortune isn't already in the user's fid list (use a set?)
+      - format the user's fid list with the new fortune by adding it to the end of the string. It should look like
+        "1,4,2,6" with 1 being the first fortune ever recieved, 6 being the most recent. Seperated by commas, no spaces
+    */
+
 
     return c.JSON(fiber.Map{
       "message": "success!",

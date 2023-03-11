@@ -27,6 +27,8 @@ export class UserpageComponent{
   message : any = '';
   messages : any[] = [];
 
+  newFortune : string = 'Hellooo';
+
   constructor(private authService: SocialAuthService, private http: HttpClient){}
 
   ngOnInit(){
@@ -65,12 +67,12 @@ export class UserpageComponent{
 
   }
 
-  submit(): void {
+  getData(): void {
     //alert(JSON.stringify("This is working"));
     //will get the variables from backend. res is the response
 
     //the get request below is for receiving the last fortune.
-    //Eventually, replace this with all the fortunes. Later we can have a get request for updating this from the backend and it'll be easier
+    //!Eventually, replace this with all the fortunes. Later we can have a get request for updating this from the backend and it'll be easier
     this.http.get('http://localhost:8000/api/user/frontend/fid').subscribe(
       (data : any) => {
         //if the array is empty, add the first item
@@ -105,6 +107,34 @@ export class UserpageComponent{
         this.lasttime = data;
       }
     );
+
+  }
+  submit(): void {
+
+    if (!this.submitted){
+      //when submitted is false, you're able to submit a fortune
+      //updating values only if the user is logged in.
+        this.http.post('http://localhost:8000/api/user/submitFortune', {
+          //When submit is called, it will sent this usename and message to the backend. 
+          //!Later find a way to input a new fortune and submit it here
+          //userid: this.user.id,
+          newfortune: this.newFortune
+        }).subscribe();
+
+        const pusher = new Pusher('a621a1a5218dda4b051a', {
+          cluster: 'us2'
+        });
+    
+        //the channel is chat
+        const channel = pusher.subscribe('userpage');
+
+        channel.bind('submitFortune', (data : any) => {
+          this.newFortune = "Our Fortune was Submitted"
+        });
+    }
+    else{
+      alert(JSON.stringify("You can't get another fortune dummy"));
+    }
 
   }
 }
