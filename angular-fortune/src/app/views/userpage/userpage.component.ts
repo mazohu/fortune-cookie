@@ -120,17 +120,7 @@ export class UserpageComponent{
           //userid: this.user.id,
           newfortune: this.newFortune
         }).subscribe();
-
-        const pusher = new Pusher('a621a1a5218dda4b051a', {
-          cluster: 'us2'
-        });
-    
-        //the channel is chat
-        const channel = pusher.subscribe('userpage');
-
-        channel.bind('submitFortune', (data : any) => {
-          this.newFortune = "Our Fortune was Submitted"
-        });
+        this.newFortune = "Our Fortune was Submitted"
     }
     else{
       alert(JSON.stringify("You can't get another fortune dummy"));
