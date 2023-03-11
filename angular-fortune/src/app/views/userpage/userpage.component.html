@@ -15,11 +15,12 @@
             <button type="button" (click)="submit()">
                 Click this button to pretend you're submitting a fortune
             </button>
+            <p>for your information, submitted is... {{ submitted }}</p>
         </div>
         <div *ngIf="submitted">
             <p>each fid is... {{ fid }}</p>
             <div *ngFor="let fortune of fid">
-                <p> - "{{ fid }}"</p>
+                <p> - "{{ fortune }}"</p>
             </div>
             <p>submitted is {{ submitted }}</p>
             <p>last time is {{ lasttime }}</p>

@@ -13,6 +13,7 @@ import (
 	"github.com/pusher/pusher-http-go/v5"
 
   "fmt"
+  "log"
 
   //these should be temporary
   "gorm.io/gorm"
@@ -20,23 +21,18 @@ import (
   "time"
 )
 
-type Temp struct {
-  //mirrors the real thing
-  Username  string    `json:"username"`   //General Info about the User
+//this struct must stay here, in the main file
+type Users struct {
+  
+  //don't need gorm.Model, that breaks the program anyways. 
+	Username  string    `json:"username"`   //General Info about the User
 	Email string        `json:"email"`
-	UserID string       `json:"userid"`		  //`gorm:"primaryKey;autoIncrement:false"` -> tried this with test2.db
+	UserID string       `json:"userid"` //`gorm:"primaryKey;autoIncrement:false"` //-> tried this with test2.db
 
   Fid string          `json:"fid"`				//Stores the Ids of all the fortunes recieved, for history. It's in order.
 	Submitted bool      `json:"submitted"`	//If a fortune has been submitted by them today.
 	LastTime time.Time  `json:"lasttime"`		//When the last fortune was submitted. Is used to find out if 24 hours has passed.
-}
-
-type anotherTemp struct {
-  //this is a one time declaration, just to be sent to frontend
-  Fid string          `json:"fid"`				//Stores the Ids of all the fortunes recieved, for history. It's in order.
-	Submitted bool      `json:"submitted"`	//If a fortune has been submitted by them today.
-	LastTime time.Time  `json:"lasttime"`		//When the last fortune was submitted. Is used to find out if 24 hours has passed.
-}
+  }
 
 func main() {
 
@@ -47,10 +43,10 @@ func main() {
 	}
   
 	// Migrate the schema
-	db.AutoMigrate(&Temp{})
+	db.AutoMigrate(&Users{})
 
   //Initialize struct variable
-  var userPointer Temp
+  var userPointer Users
   //*These are here so you can delete any possible rows if need be, restarting the database
 	db.Unscoped().Where("username = ?", "Misty").Delete(&userPointer)
   db.Unscoped().Where("username = ?", "Alexia Rangel Krashenitsa").Delete(&userPointer)
@@ -85,7 +81,7 @@ func main() {
 
   //This is how we add to the database
   app.Post("/api/user/populate", func(c *fiber.Ctx) error {
-    ourPerson := Temp{Username: "username", Email: "em", UserID: "uID", Fid: "", Submitted: true, LastTime: time.Date(2002, time.January, 1, 23, 0, 0, 0, time.UTC)}
+    ourPerson := Users{Username: "username", Email: "em", UserID: "uID", Fid: "", Submitted: true, LastTime: time.Date(2002, time.January, 1, 23, 0, 0, 0, time.UTC)}
 
     if err := c.BodyParser(&ourPerson); err != nil {
 			return err
@@ -102,6 +98,12 @@ func main() {
     if (result.RowsAffected <= 0){
       db.Create(&ourPerson)
     } 
+    db.First(&userPointer, "user_id = ?", ourPerson.UserID).Scan(&userPointer)
+
+    //Run routine checks, like...
+    //if the fortune has been submitted today or not. If not, update
+    //userPointer = submittedCheck(userPointer)
+    //db.Model(&userPointer).Update("submitted", userPointer.Submitted)
 
     return c.JSON(fiber.Map{
       "message": "success!",
@@ -112,9 +114,6 @@ func main() {
   //This is how we show what's in the database to the frontend
   app.Get("/api/user/frontend/fid", func(c *fiber.Ctx) error {
 
-    // //Setting the pointer so it can retrieve the userID and also update the database
-    // db.First(&userPointer, "user_id = ?", "uID").Scan(&userPointer)
-
     //sending the information over by json-ing the pointer info
     return c.JSON(userPointer.Fid)
 
@@ -122,6 +121,9 @@ func main() {
 
    //This is how we show what's in the database to the frontend
    app.Get("/api/user/frontend/submitted", func(c *fiber.Ctx) error {
+
+    log.Println("This is my user:", userPointer.Username)
+    log.Println("This is the submitted:", userPointer.Submitted)
 
     //sending the information over by json-ing the pointer info
     return c.JSON(userPointer.Submitted)
@@ -140,3 +142,4 @@ func main() {
   //This needs to be the case for front end to request from backend. 
 	app.Listen(":8000")
 }
+
