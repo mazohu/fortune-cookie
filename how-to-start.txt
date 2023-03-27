@@ -1,7 +1,7 @@
 Two terminals:
 
 1)  cd angular-fortune
-    ng server
+    ng serve
 
 2)  cd back-end
     go run .
