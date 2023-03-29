@@ -1,9 +1,11 @@
 Two terminals:
 
 1)  cd angular-fortune
+    npm install (only once) to install npm_modules
     ng serve
 
 2)  cd back-end
+    npm install (only once) to install packages
     go run .
 
 And keep those terminals running!

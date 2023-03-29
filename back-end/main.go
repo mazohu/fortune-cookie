@@ -14,7 +14,6 @@ import (
 
   "fmt"
   "log"
-  "reflect"
 
   //these should be temporary
   "gorm.io/gorm"
@@ -134,28 +133,34 @@ func main() {
     if err != nil {
       fmt.Println(err.Error())
     }
-    log.Println("The type of the fortune", reflect.TypeOf(fortune.Content))
-
 
     log.Println("This is the new fortune:", fortune.Content)
-    log.Println("This is what is before stored inside:", userPointer.Fid)
-    //db.First(&userPointer, "user_id = ?", temp.UserID).Scan(&userPointer)
+    //And now put it in the fortune database
 
-    var tempList = userPointer.Fid
-    log.Println("This is tempList:", tempList)
-    if (tempList == ""){
-      //if the list is empty, this is the first entry
-      userPointer.Fid = fortune.Content
-    }else{
-      tempList = userPointer.Fid + "," + fortune.Content
-      userPointer.Fid = tempList
-    }
+    return c.JSON(fiber.Map{
+      "message": "success!",
+    })
 
-    log.Println("This is my user:", userPointer.Username)
-    log.Println("This is what is now stored inside:", userPointer.Fid)
 
-    //update the database to reflect these changes
-    db.Model(&userPointer).Where("user_id", userPointer.UserID).Update("fid", userPointer.Fid)
+    //!IGNORE EVERYTHING BELOW, ITS EXTRA INFO I WILL DEAL WITH LATER
+    // log.Println("This is what is before stored inside:", userPointer.Fid)
+    // //db.First(&userPointer, "user_id = ?", temp.UserID).Scan(&userPointer)
+
+    // var tempList = userPointer.Fid
+    // log.Println("This is tempList:", tempList)
+    // if (tempList == ""){
+    //   //if the list is empty, this is the first entry
+    //   userPointer.Fid = fortune.Content
+    // }else{
+    //   tempList = userPointer.Fid + "," + fortune.Content
+    //   userPointer.Fid = tempList
+    // }
+
+    // log.Println("This is my user:", userPointer.Username)
+    // log.Println("This is what is now stored inside:", userPointer.Fid)
+
+    // //update the database to reflect these changes
+    // db.Model(&userPointer).Where("user_id", userPointer.UserID).Update("fid", userPointer.Fid)
 
     /*
     !So what would ACTUALLY happen?
@@ -172,11 +177,6 @@ func main() {
       - format the user's fid list with the new fortune by adding it to the end of the string. It should look like
         "1,4,2,6" with 1 being the first fortune ever recieved, 6 being the most recent. Seperated by commas, no spaces
     */
-
-
-    return c.JSON(fiber.Map{
-      "message": "success!",
-    })
 
 	})
 

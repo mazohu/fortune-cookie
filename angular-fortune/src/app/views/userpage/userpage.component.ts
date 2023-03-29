@@ -98,7 +98,6 @@ export class UserpageComponent{
         this.http.post('http://localhost:8000/api/user/submitFortune', {
           //When submit is called, it will sent this usename and message to the backend. 
           //!Later find a way to input a new fortune and submit it here
-          //userid: this.user.id,
           newfortune: this.newFortune
         }).subscribe();
         this.newFortune = "Our Fortune was Submitted"
