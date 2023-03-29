@@ -81,6 +81,7 @@ func main() {
 	})
 
   //This is how we add to the database
+  //!Later chance submitted to false, and Fid to ""
   app.Post("/api/user/populate", func(c *fiber.Ctx) error {
     ourPerson := Users{Username: "username", Email: "em", UserID: "uID", Fid: "hello", Submitted: true, LastTime: time.Date(2002, time.January, 1, 23, 0, 0, 0, time.UTC)}
 
@@ -101,8 +102,7 @@ func main() {
     } 
     db.First(&userPointer, "user_id = ?", ourPerson.UserID).Scan(&userPointer)
 
-    //Run routine checks, like...
-    //if the fortune has been submitted today or not. If not, update
+    //!Run routine checks, like... if the fortune has been submitted today or not. If not, update! Activate Later
     //userPointer = submittedCheck(userPointer)
     //db.Model(&userPointer).Update("submitted", userPointer.Submitted)
 
@@ -116,23 +116,23 @@ func main() {
   app.Post("/api/user/submitFortune", func(c *fiber.Ctx) error {
 
     //temporary struct for recieving information
-    newFortune := struct {
-      Text string   `json:"newfortune"`
+    fortune := struct {
+      Content string   `json:"newfortune"`
     }{}
 
-    if err := c.BodyParser(&newFortune); err != nil {
+    if err := c.BodyParser(&fortune); err != nil {
 			return err
 		}
 
     //Recieving the username, email, and userID info from frontend and putting it into our struct
-		err := pusherClient.Trigger("userpage", "submitFortune", newFortune)
+		err := pusherClient.Trigger("userpage", "submitFortune", fortune)
     if err != nil {
       fmt.Println(err.Error())
     }
-    log.Println("The type of the fortune", reflect.TypeOf(newFortune.Text))
+    log.Println("The type of the fortune", reflect.TypeOf(fortune.Content))
 
 
-    log.Println("This is the new fortune:", newFortune.Text)
+    log.Println("This is the new fortune:", fortune.Content)
     log.Println("This is what is before stored inside:", userPointer.Fid)
     //db.First(&userPointer, "user_id = ?", temp.UserID).Scan(&userPointer)
 
@@ -140,9 +140,9 @@ func main() {
     log.Println("This is tempList:", tempList)
     if (tempList == ""){
       //if the list is empty, this is the first entry
-      userPointer.Fid = newFortune.Text
+      userPointer.Fid = fortune.Content
     }else{
-      tempList = userPointer.Fid + "," + newFortune.Text
+      tempList = userPointer.Fid + "," + fortune.Content
       userPointer.Fid = tempList
     }
 
