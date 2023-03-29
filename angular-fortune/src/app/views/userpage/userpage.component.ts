@@ -21,7 +21,7 @@ export class UserpageComponent{
   fid : string[] = [];
   submitted : boolean = false;
   lasttime : any = '';
-  newFortune : string = 'Hellooo';
+  newFortune : string = '';
 
   constructor(private authService: SocialAuthService, private http: HttpClient){}
 
@@ -53,19 +53,19 @@ export class UserpageComponent{
     //will get the variables from backend. res is the response
 
     //the get request below is for receiving the last fortune.
-    //!Eventually, replace this with all the fortunes. Later we can have a get request for updating this from the backend and it'll be easier
-    this.http.get('http://localhost:8000/api/user/frontend/fid').subscribe(
-      (data : any) => {
-        //if the array is empty, add the first item
-        if (!this.fid.length){
-          this.fid.push(data);
-        }
-        //if its not empty, it checks if the last item is the same
-        else if (data != this.fid[this.fid.length - 1]){
-          this.fid.push(data);
-        }
-      }
-    );
+    // //!Eventually, replace this with all the fortunes. Later we can have a get request for updating this from the backend and it'll be easier
+    // this.http.get('http://localhost:8000/api/user/frontend/fid').subscribe(
+    //   (data : any) => {
+    //     //if the array is empty, add the first item
+    //     if (!this.fid.length){
+    //       this.fid.push(data);
+    //     }
+    //     //if its not empty, it checks if the last item is the same
+    //     else if (data != this.fid[this.fid.length - 1]){
+    //       this.fid.push(data);
+    //     }
+    //   }
+    // );
     // this.http.get('http://localhost:8000/api/user/frontend/fid').subscribe(
     //   (data : any) => {
     //     this.fid.push(data);
@@ -91,7 +91,6 @@ export class UserpageComponent{
 
   }
   submit(): void {
-
     if (!this.submitted){
       //when submitted is false, you're able to submit a fortune
       //updating values only if the user is logged in.
@@ -106,5 +105,9 @@ export class UserpageComponent{
       alert(JSON.stringify("You can't get another fortune dummy"));
     }
 
+  }
+
+  changeFortune(e : any) {
+    this.newFortune = e.target.value;
   }
 }

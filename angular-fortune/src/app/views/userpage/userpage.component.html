@@ -26,10 +26,16 @@
             <p>last time is {{ lasttime }}</p>
         </div>
         <div>
-            <button type="button" (click)="submit()">
+            <!-- <button type="button" (click)="submit()">
                 Click this button to pretend you're submitting a fortune
             </button>
-            <p>for your information, the fortune we have stored is... {{ newFortune }}</p>
+            <p>for your information, the fortune we have stored is... {{ newFortune }}</p> -->
+            <form (submit)="submit()">
+                <input type="text" class="form-control" placeholder="Submit a Fortune"
+                  (change)="changeFortune($event)"
+                />
+                <p>You entered {{newFortune}}</p>
+              </form>
         </div>
     </div>
 

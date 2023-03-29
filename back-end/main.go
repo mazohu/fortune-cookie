@@ -82,7 +82,7 @@ func main() {
   //This is how we add to the database
   //!Later chance submitted to false, and Fid to ""
   app.Post("/api/user/populate", func(c *fiber.Ctx) error {
-    ourPerson := Users{Username: "username", Email: "em", UserID: "uID", Fid: "hello", Submitted: true, LastTime: time.Date(2002, time.January, 1, 23, 0, 0, 0, time.UTC)}
+    ourPerson := Users{Username: "username", Email: "em", UserID: "uID", Fid: "", Submitted: true, LastTime: time.Date(2002, time.January, 1, 23, 0, 0, 0, time.UTC)}
 
     if err := c.BodyParser(&ourPerson); err != nil {
 			return err
@@ -137,9 +137,7 @@ func main() {
     log.Println("This is the new fortune:", fortune.Content)
     //And now put it in the fortune database
 
-    return c.JSON(fiber.Map{
-      "message": "success!",
-    })
+    
 
 
     //!IGNORE EVERYTHING BELOW, ITS EXTRA INFO I WILL DEAL WITH LATER
@@ -161,6 +159,10 @@ func main() {
 
     // //update the database to reflect these changes
     // db.Model(&userPointer).Where("user_id", userPointer.UserID).Update("fid", userPointer.Fid)
+
+    return c.JSON(fiber.Map{
+      "message": "success!",
+    })
 
     /*
     !So what would ACTUALLY happen?
