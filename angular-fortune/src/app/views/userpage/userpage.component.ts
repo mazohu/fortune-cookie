@@ -21,12 +21,6 @@ export class UserpageComponent{
   fid : string[] = [];
   submitted : boolean = false;
   lasttime : any = '';
-
-  //this username is FAKE don't even think about it
-  username : any = 'username';
-  message : any = '';
-  messages : any[] = [];
-
   newFortune : string = 'Hellooo';
 
   constructor(private authService: SocialAuthService, private http: HttpClient){}
@@ -41,19 +35,6 @@ export class UserpageComponent{
     const pusher = new Pusher('a621a1a5218dda4b051a', {
       cluster: 'us2'
     });
-
-    //the channel is chat
-    const channel = pusher.subscribe('chat');
-
-    //the event is 'message'
-    channel.bind('message', (data : any) => {
-      this.messages.push(data)
-      //alert(JSON.stringify(data));
-    });
-
-    for(let i=0 ; i < this.messages.length ; i++){  //How to properly iterate here!!
-      console.log(this.messages[i])
-    }
 
     //updating values only if the user is logged in.
     if (this.loggedIn){

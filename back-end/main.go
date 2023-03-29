@@ -112,13 +112,18 @@ func main() {
 
 	})
 
-  //This is how to submit a fortune to the fortune database
+
+  /*This is how to submit a fortune to the fortune database. 
+    We will be getting the string fortune from the user. 
+  //*They submitted this fortune, we're putting it in the fortune database
+  */
   app.Post("/api/user/submitFortune", func(c *fiber.Ctx) error {
 
     //temporary struct for recieving information
     fortune := struct {
       Content string   `json:"newfortune"`
     }{}
+
 
     if err := c.BodyParser(&fortune); err != nil {
 			return err
