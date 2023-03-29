@@ -115,7 +115,7 @@ export class UserpageComponent{
       //when submitted is false, you're able to submit a fortune
       //updating values only if the user is logged in.
         this.http.post('http://localhost:8000/api/user/submitFortune', {
-          //When submit is called, it will sent this usename and message to the backend. 
+          //When submit is called, it will sent this username and message to the backend. 
           //!Later find a way to input a new fortune and submit it here
           //userid: this.user.id,
           newfortune: this.newFortune

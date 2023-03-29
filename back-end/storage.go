@@ -28,7 +28,8 @@ package main
 import (
 	"log"
 	"time"
-	//"fmt"
+	"fmt"
+	"hash/fnv"
 
 	"gorm.io/gorm"
   	"gorm.io/driver/sqlite"
@@ -58,14 +59,13 @@ import (
 // 	LastTime time.Time  `json:"lasttime"`		//When the last fortune was submitted. Is used to find out if 24 hours has passed.
 //   }
 
-  type Fortunes struct {
-	gorm.Model
+//   type Fortunes struct {
+// 	gorm.Model
 
-	Fid string				//`gorm:"primaryKey;autoIncrement:false"`
-	Author string
-	Text string
-
-  }
+// 	Fid string				//`gorm:"primaryKey;autoIncrement:false"`
+// 	Author string
+// 	Text string
+//   }
 
 /*	//& The main database functions are written below
 	Basically, one function retrieves the user pointer & db, and the
@@ -150,6 +150,13 @@ func deleteRow(userPointer Users, theID uint, db *gorm.DB){
 	db.Unscoped().Delete(&userPointer, theID)
 }
 
+//Declared in main.go temporarily
+// // Generates the fortune ID
+// func hashFortune(fortune string) (string) {
+// 	h := fnv.New32a()
+// 	h.Write([]byte(fortune))
+// 	return fmt.Sprint(h.Sum32())
+// }
 
 //For testing the fortuneTimer
 func fortuneTimerTesting(userPointer Users) (Users){

@@ -13,6 +13,7 @@ import (
 	"github.com/pusher/pusher-http-go/v5"
 
   "fmt"
+  "hash/fnv"
   "log"
   "reflect"
 
@@ -23,31 +24,34 @@ import (
 )
 
 //this struct must stay here, in the main file
-type Users struct {
-  
-  //don't need gorm.Model, that breaks the program anyways. 
+type User struct {
 	Username  string    `json:"username"`   //General Info about the User
 	Email string        `json:"email"`
-	UserID string       `json:"userid"` //`gorm:"primaryKey;autoIncrement:false"` //-> tried this with test2.db
-
-  Fid string          `json:"fid"`				//Stores the Ids of all the fortunes recieved, for history. It's in order.
+	UserID string       `gorm: primaryKey;json:"userid"`
+  Fortunes []Fortune `gorm:"many2many:user_fortunes;json:history"`			//Stores the FIDs of the user's received fortunes
 	Submitted bool      `json:"submitted"`	//If a fortune has been submitted by them today.
 	LastTime time.Time  `json:"lasttime"`		//When the last fortune was submitted. Is used to find out if 24 hours has passed.
-  }
+}
+
+type Fortune struct {
+  FID uint32  `gorm: primaryKey`
+  Author string //Keeping for now, but will need to make this a foreign key if we end up logging authors
+  Content string
+}
 
 func main() {
 
   //opening the test database
-	db, err := gorm.Open(sqlite.Open("testBF.db"), &gorm.Config{})
+	db, err := gorm.Open(sqlite.Open("test_fortunes.db"), &gorm.Config{})
 	if err != nil {
-	  panic("failed to connect database")
+	  panic("Failed to connect database")
 	}
   
 	// Migrate the schema
-	db.AutoMigrate(&Users{})
+	db.AutoMigrate(&User{}, &Fortune{})
 
   //Initialize struct variable
-  var userPointer Users
+  var userPointer User
   //*These are here so you can delete any possible rows if need be, restarting the database
 	db.Unscoped().Where("username = ?", "Misty").Delete(&userPointer)
   db.Unscoped().Where("username = ?", "Alexia Rangel Krashenitsa").Delete(&userPointer)
@@ -82,24 +86,25 @@ func main() {
 
   //This is how we add to the database
   app.Post("/api/user/populate", func(c *fiber.Ctx) error {
-    ourPerson := Users{Username: "username", Email: "em", UserID: "uID", Fid: "hello", Submitted: true, LastTime: time.Date(2002, time.January, 1, 23, 0, 0, 0, time.UTC)}
+    ourPerson := User{Username: "username", Email: "em", UserID: "uID", LastTime: time.Date(2002, time.January, 1, 23, 0, 0, 0, time.UTC)} //Don't update fortune history
 
     if err := c.BodyParser(&ourPerson); err != nil {
 			return err
 		}
 
-    //Recieving the username, email, and userID info from frontend and putting it into our struct
+    //Receiving the username, email, and userID info from frontend and putting it into our struct
 		err := pusherClient.Trigger("userpage", "login", ourPerson)
     if err != nil {
       fmt.Println(err.Error())
     }
 
-    //Check if we have this user in the database already, or if we need to make a new row
-    result := db.Find(&userPointer, "user_id = ?", ourPerson.UserID)
-    if (result.RowsAffected <= 0){
-      db.Create(&ourPerson)
-    } 
-    db.First(&userPointer, "user_id = ?", ourPerson.UserID).Scan(&userPointer)
+    //Add user to the database or retrieve user if they already exist
+    db.Omit("Fortunes").FirstOrCreate(&userPointer, ourPerson)
+    // result := db.Find(&userPointer, "user_id = ?", ourPerson.UserID)
+    // if (result.RowsAffected <= 0){
+    //   db.Create(&ourPerson)
+    // } 
+    // db.First(&userPointer, "user_id = ?", ourPerson.UserID).Scan(&userPointer)
 
     //Run routine checks, like...
     //if the fortune has been submitted today or not. If not, update
@@ -114,43 +119,30 @@ func main() {
 
   //This is how to submit a fortune to the fortune database
   app.Post("/api/user/submitFortune", func(c *fiber.Ctx) error {
-
-    //temporary struct for recieving information
-    newFortune := struct {
-      Text string   `json:"newfortune"`
+    //Temporary struct for holding the fortune content submitted by the user
+    fortune := struct {
+      Content string   `json:"newfortune"`
     }{}
 
-    if err := c.BodyParser(&newFortune); err != nil {
+    if err := c.BodyParser(&fortune); err != nil {
 			return err
 		}
 
-    //Recieving the username, email, and userID info from frontend and putting it into our struct
-		err := pusherClient.Trigger("userpage", "submitFortune", newFortune)
+    //Receive the fortune content from the client
+		err := pusherClient.Trigger("userpage", "submitFortune", fortune)
     if err != nil {
       fmt.Println(err.Error())
     }
-    log.Println("The type of the fortune", reflect.TypeOf(newFortune.Text))
 
-
-    log.Println("This is the new fortune:", newFortune.Text)
-    log.Println("This is what is before stored inside:", userPointer.Fid)
-    //db.First(&userPointer, "user_id = ?", temp.UserID).Scan(&userPointer)
-
-    var tempList = userPointer.Fid
-    log.Println("This is tempList:", tempList)
-    if (tempList == ""){
-      //if the list is empty, this is the first entry
-      userPointer.Fid = newFortune.Text
-    }else{
-      tempList = userPointer.Fid + "," + newFortune.Text
-      userPointer.Fid = tempList
+    log.Println("This is the type of the new fortune", reflect.TypeOf(fortune.Content))
+    log.Println("This is the new fortune:", fortune.Content)
+    //Hash the fortune
+    newFortune := Fortune{FID:hashFortune(fortune.Content), Author: userPointer.UserID, Content: fortune.Content}
+    //Add fortune to the database if the user has not already submitted
+    if userPointer.Submitted == false {
+      db.Create(&newFortune)
+      db.Model(&userPointer).Update("Submitted", true)
     }
-
-    log.Println("This is my user:", userPointer.Username)
-    log.Println("This is what is now stored inside:", userPointer.Fid)
-
-    //update the database to reflect these changes
-    db.Model(&userPointer).Where("user_id", userPointer.UserID).Update("fid", userPointer.Fid)
 
     /*
     !So what would ACTUALLY happen?
@@ -159,8 +151,8 @@ func main() {
       - I think the Fids should be incremented like 1, 2, 3, so on.
       - So when the new fortune is submitted, it gets the next number
       - Make sure to include in the row the userid and content
-    !So when do I add an Fid to the current user? 
-    When recieving a fortune, 
+    !So when do I add an fid to the current user? 
+    When receiving a fortune, 
       - we get the random id number
       - check if the user id is not the current user
       - check that the fortune isn't already in the user's fid list (use a set?)
@@ -179,7 +171,8 @@ func main() {
   app.Get("/api/user/frontend/fid", func(c *fiber.Ctx) error {
 
     //sending the information over by json-ing the pointer info
-    return c.JSON(userPointer.Fid)
+    var userFortunes []Fortune
+    return c.JSON(db.Model(&userPointer).Association("Fortunes").Find(userFortunes))
 
 	})
 
@@ -205,5 +198,12 @@ func main() {
   //* Front end and Back end runs on different ports
   //This needs to be the case for front end to request from backend. 
 	app.Listen(":8000")
+}
+
+// Generates the fortune ID
+func hashFortune(fortune string) (uint32) {
+	h := fnv.New32a()
+	h.Write([]byte(fortune))
+	return h.Sum32()
 }
 
