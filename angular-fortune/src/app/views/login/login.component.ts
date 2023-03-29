@@ -8,7 +8,6 @@ import { Router } from '@angular/router';
 })
 export class LoginComponent {
   title = 'angular-fortune';
-
   user:any;
   loggedIn:any;
 

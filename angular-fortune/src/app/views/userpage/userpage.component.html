@@ -1,22 +1,91 @@
-    <div *ngIf="!user">
-        <h4>Sign in with Google first by Navigating to login</h4>
-        <p>{{ loggedIn }}</p>
-    </div>
-  
-    <div *ngIf="user">
-        <img src="{{ user.photoUrl }}">
-        <div>
-        <h4>My name is {{ user.name }}</h4>
-        <p>{{ user.email }}</p>
-        <p>{{ user.id }}</p>
-        <p>{{ loggedIn }}</p>
+<div class="bg">
+    
+        <div><div *ngIf="!user">
+            <nav class="navbar navbar-expand-lg navbar-dark bg-danger">
+                <span class="navbar-brand mb-0 h1">Fortune Cookie</span>
+                <button class="navbar-toggler" type="button"s data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                  <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                  <ul class="navbar-nav">
+                    <li class="nav-item active">
+                      <a [routerLink]="['']" class="nav-link" href="#">Home </a>
+                    </li>
+                    <li class="nav-item">
+                      <a [routerLink]="['/login']" class="nav-link" href="#">Login <span class="sr-only">(current)</span></a>
+                    </li>
+                    <!-- <li class="nav-item">
+                      <a class="nav-link disabled" href="#">Disabled</a>
+                    </li> -->
+                  </ul>
+                </div>
+              </nav>
+              <div style="text-align:left">
+                <br>
+                <div class="d-inline-flex p-2 bd-highlight text-danger bg-light"><h4>Sign in with Google first by Navigating to login ----></h4></div>
+              </div>
+            <p>{{ loggedIn }}</p>
         </div>
-        <div>
-            <button type="button" (click)="getData()">
+</div>
+    <div *ngIf="user">
+        <nav class="navbar navbar-expand-lg navbar-dark bg-danger">
+            <span class="navbar-brand mb-0 h1">Fortune Cookie</span>
+            <button class="navbar-toggler" type="button"s data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+              <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+              <ul class="navbar-nav">
+                <li class="nav-item active">
+                  <a [routerLink]="['']" class="nav-link" href="#">Home </a>
+                </li>
+                <li class="nav-item">
+                  <a [routerLink]="['/login']" class="nav-link" href="#">Login </a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link disabled" href="#">UserHome<span class="sr-only">(current)</span></a>
+                </li>
+              </ul>
+            </div>
+          </nav>
+          <!--end navigation-->
+          <div class="container-fluid">
+            <div style="text-align:center">
+              <button class="button button4">Welcome to the UserHome</button>
+            </div>
+            <div style="text-align:center">
+              <div class="d-inline-flex p-2 bd-highlight text-danger bg-light">Eat a Cookie to write and Receive a fortune!</div>
+            </div>
+          </div>>
+          <br>
+          <div class="container">
+            <div class="d-flex flex-row flex-shrink-0 bg-white">
+              <div class=" col-lg-6 align-items-center flex-shrink-0 p-3 link-dark text-decoration-none border-bottom">
+                    <h3>My info:</h3>
+                    <img src="{{ user.photoUrl }}">
+                    <div>
+                    <h4>My name is {{ user.name }}</h4>
+                    <p>{{ user.email }}</p>
+                    <p>{{ user.id }}</p>
+                    <p>{{ loggedIn }}</p>
+                    </div>
+              </div>
+              <div class=" col-lg-6 align-items-center flex-shrink-0 p-3 link-dark text-decoration-none border-bottom">
+                <h2>Time 'til the next fortune:</h2>
+                <br>
+                <div class="d-flex justify-content-center">
+                    <div class="btn-group-vertical btn-group-lg">
+                        <button type="button" class="btn btn-secondary">Eat a Cookie</button>
+                        <button type="button" class="btn btn-secondary">View Past Fortunes</button>
+                        <button type="button" class="btn btn-secondary">Logout</button>
+                    </div>
+                </div>
+              </div>
+
+
+            <!-- <button type="button" (click)="getData()">
                 Click this button to get info from the database about this user (Just as an example)
             </button>
             <p>for your information, submitted is... {{ submitted }}</p>
-        </div>
         <div *ngIf="submitted">
             <p>each fid is... </p>
             <div *ngFor="let fortune of fid">
@@ -30,7 +99,8 @@
                 Click this button to pretend you're submitting a fortune
             </button>
             <p>for your information, the fortune we have stored is... {{ newFortune }}</p>
-        </div>
+        </div> -->
     </div>
+</div>
 
     
