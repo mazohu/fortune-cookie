@@ -27,23 +27,29 @@ type Users struct {
   //don't need gorm.Model, that breaks the program anyways. 
 	Username  string    `json:"username"`   //General Info about the User
 	Email string        `json:"email"`
-	UserID string       `json:"userid"` //`gorm:"primaryKey;autoIncrement:false"` //-> tried this with test2.db
+	UserID string       `json:"userid" gorm:"primaryKey"` //`gorm:"primaryKey;autoIncrement:false"` //-> tried this with test2.db
 
   Fid string          `json:"fid"`				//Stores the Ids of all the fortunes recieved, for history. It's in order.
 	Submitted bool      `json:"submitted"`	//If a fortune has been submitted by them today.
 	LastTime time.Time  `json:"lasttime"`		//When the last fortune was submitted. Is used to find out if 24 hours has passed.
   }
 
+  type Fortune struct {
+    FID uint32  `gorm:"primaryKey"`
+    Author string //Keeping for now, but will need to make this a foreign key if we end up logging authors
+    Content string
+  }
+
 func main() {
 
   //opening the test database
-	db, err := gorm.Open(sqlite.Open("testBF.db"), &gorm.Config{})
+	db, err := gorm.Open(sqlite.Open("testBFfortunes.db"), &gorm.Config{})
 	if err != nil {
 	  panic("failed to connect database")
 	}
   
 	// Migrate the schema
-	db.AutoMigrate(&Users{})
+	db.AutoMigrate(&Users{},&Fortune{})
 
   //Initialize struct variable
   var userPointer Users
