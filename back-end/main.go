@@ -24,7 +24,6 @@ import (
 
 //this struct must stay here, in the main file
 type Users struct {
-  
   //don't need gorm.Model, that breaks the program anyways. 
 	Username  string    `json:"username"`   //General Info about the User
 	Email string        `json:"email"`
@@ -36,9 +35,9 @@ type Users struct {
   }
 
   type Fortune struct {
-    FID uint32  `json:"fid" gorm:"primaryKey"`
-    Author string `json:"author"`//Keeping for now, but will need to make this a foreign key if we end up logging authors
-    Content string `json:"content"`
+    FID uint32        `json:"fid" gorm:"primaryKey"`
+    Author string     `json:"author"`//Keeping for now, but will need to make this a foreign key if we end up logging authors
+    Content string    `json:"content"`
   }
 
 func main() {
@@ -74,21 +73,21 @@ func main() {
     Secure: true,
   }
 
-  app.Post("/api/messages", func(c *fiber.Ctx) error {
-		var data map[string]string
+  // app.Post("/api/messages", func(c *fiber.Ctx) error {
+	// 	var data map[string]string
 
-		if err := c.BodyParser(&data); err != nil {
-			return err
-		}
+	// 	if err := c.BodyParser(&data); err != nil {
+	// 		return err
+	// 	}
 
-    //The channel is 'chat', the event is 'message', the data we want to send is 'data'
-		err := pusherClient.Trigger("chat", "message", data)
-    if err != nil {
-      fmt.Println(err.Error())
-    }
+  //   //The channel is 'chat', the event is 'message', the data we want to send is 'data'
+	// 	err := pusherClient.Trigger("chat", "message", data)
+  //   if err != nil {
+  //     fmt.Println(err.Error())
+  //   }
 
-		return c.JSON([]string{})
-	})
+	// 	return c.JSON([]string{})
+	// })
 
   //This is how we add to the database
   //!Later chance submitted to false, and Fid to ""
@@ -157,6 +156,7 @@ func main() {
       if userPointer.Submitted == false {
         db.Create(&newFortune)
         db.Model(&userPointer).Update("Submitted", true)
+        //update last submitted too
       }
 
       return c.JSON(fiber.Map{
