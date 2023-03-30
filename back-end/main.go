@@ -35,9 +35,9 @@ type Users struct {
   }
 
   type Fortune struct {
-    FID uint32  `gorm:"primaryKey"`
-    Author string //Keeping for now, but will need to make this a foreign key if we end up logging authors
-    Content string
+    FID uint32  `json:"fid" gorm:"primaryKey"`
+    Author string `json:"author"`//Keeping for now, but will need to make this a foreign key if we end up logging authors
+    Content string `json:"content"`
   }
 
 func main() {
@@ -53,9 +53,13 @@ func main() {
 
   //Initialize struct variable
   var userPointer Users
+  var fortunePointer Fortune
+
   //*These are here so you can delete any possible rows if need be, restarting the database
 	db.Unscoped().Where("username = ?", "Misty").Delete(&userPointer)
   db.Unscoped().Where("username = ?", "Alexia Rangel Krashenitsa").Delete(&userPointer)
+  db.Unscoped().Where("author = ?", "102694379822418651950").Delete(&fortunePointer)
+  db.Unscoped().Where("author = ?", "106932060789169127910").Delete(&fortunePointer)
 
 	app := fiber.New()
 
@@ -143,7 +147,31 @@ func main() {
     log.Println("This is the new fortune:", fortune.Content)
     //And now put it in the fortune database
 
-    
+    if (fortune.Content != ""){
+
+      var newFID uint32 = 0
+      ourFortune := Fortune{FID: newFID, Author: userPointer.UserID, Content: fortune.Content}
+
+      result := db.Find(&fortunePointer, "f_id = ?", newFID)
+      if (result.RowsAffected <= 0){
+        //doesn't exist
+        db.Create(&ourFortune)
+      } else{
+        db.Last(&fortunePointer)
+        var newFID uint32 = fortunePointer.FID + 1;
+        db.Create(Fortune{FID: newFID, Author: userPointer.UserID, Content: fortune.Content})
+      }
+
+      return c.JSON(fiber.Map{
+        "message": "success!",
+      })
+
+    }else{
+      //we have an empty fortune
+      return c.JSON(fiber.Map{
+        "message": "failed!",
+      })
+    }
 
 
     //!IGNORE EVERYTHING BELOW, ITS EXTRA INFO I WILL DEAL WITH LATER
@@ -166,9 +194,7 @@ func main() {
     // //update the database to reflect these changes
     // db.Model(&userPointer).Where("user_id", userPointer.UserID).Update("fid", userPointer.Fid)
 
-    return c.JSON(fiber.Map{
-      "message": "success!",
-    })
+    
 
     /*
     !So what would ACTUALLY happen?
