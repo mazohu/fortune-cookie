@@ -29,14 +29,14 @@ type User struct {
 	Username  string    `json:"username"`   //General Info about the User
 	Email string        `json:"email"`
 	ID string       `json:"userid; gorm:primaryKey"`
-  Fortunes []Fortune `json:"history gorm:many2many:users_fortunes;"`			//Stores the FIDs of the user's received fortunes
+  Fortunes []Fortune `json:"history gorm:many2many:users_fortunes;foreignKey:"`			//Stores the FIDs of the user's received fortunes
 	Submitted bool      `json:"submitted"`	//If a fortune has been submitted by them today.
 	LastTime time.Time  `json:"lasttime"`		//When the last fortune was submitted. Is used to find out if 24 hours has passed.
 }
 
 type Fortune struct {
   ID uint32  `gorm:"primaryKey"`
-  Author string //Keeping for now, but will need to make this a foreign key if we end up logging authors
+  Author User `gorm:"foreignKey:ID"`
   Content string
 }
 
@@ -135,7 +135,7 @@ func main() {
     log.Println("This is the type of the new fortune", reflect.TypeOf(fortune.Content))
     log.Println("This is the new fortune:", fortune.Content)
     //Hash the fortune
-    newFortune := Fortune{ID:hashFortune(fortune.Content), Author: userPointer.ID, Content: fortune.Content}
+    newFortune := Fortune{ID:hashFortune(fortune.Content), Author: userPointer, Content: fortune.Content}
     //Add fortune to the database if the user has not already submitted
     if userPointer.Submitted == false {
       db.Create(&newFortune)
