@@ -12,6 +12,7 @@ import (
 	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/pusher/pusher-http-go/v5"
 
+  "hash/fnv"
   "fmt"
   "log"
 
@@ -149,17 +150,13 @@ func main() {
 
     if (fortune.Content != ""){
 
-      var newFID uint32 = 0
-      ourFortune := Fortune{FID: newFID, Author: userPointer.UserID, Content: fortune.Content}
-
-      result := db.Find(&fortunePointer, "f_id = ?", newFID)
-      if (result.RowsAffected <= 0){
-        //doesn't exist
-        db.Create(&ourFortune)
-      } else{
-        db.Last(&fortunePointer)
-        var newFID uint32 = fortunePointer.FID + 1;
-        db.Create(Fortune{FID: newFID, Author: userPointer.UserID, Content: fortune.Content})
+      //Hash the fortune
+      newFortune := Fortune{FID:hashFortune(fortune.Content), Author: userPointer.UserID, Content: fortune.Content}
+      db.Create(&newFortune)
+      //Add fortune to the database if the user has not already submitted
+      if userPointer.Submitted == false {
+        db.Create(&newFortune)
+        db.Model(&userPointer).Update("Submitted", true)
       }
 
       return c.JSON(fiber.Map{
@@ -244,5 +241,12 @@ func main() {
   //* Front end and Back end runs on different ports
   //This needs to be the case for front end to request from backend. 
 	app.Listen(":8000")
+}
+
+// Generates the fortune ID
+func hashFortune(fortune string) (uint32) {
+	h := fnv.New32a()
+	h.Write([]byte(fortune))
+	return h.Sum32()
 }
 
