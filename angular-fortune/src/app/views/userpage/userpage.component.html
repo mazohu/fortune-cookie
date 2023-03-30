@@ -1,6 +1,6 @@
 <div class="bg">
     
-        <div><div *ngIf="!user">
+        <div *ngIf="!user">
             <nav class="navbar navbar-expand-lg navbar-dark bg-danger">
                 <span class="navbar-brand mb-0 h1">Fortune Cookie</span>
                 <button class="navbar-toggler" type="button"s data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -26,7 +26,7 @@
               </div>
             <p>{{ loggedIn }}</p>
         </div>
-</div>
+
     <div *ngIf="user">
         <nav class="navbar navbar-expand-lg navbar-dark bg-danger">
             <span class="navbar-brand mb-0 h1">Fortune Cookie</span>
@@ -74,8 +74,8 @@
                 <br>
                 <div class="d-flex justify-content-center">
                     <div class="btn-group-vertical btn-group-lg">
-                        <button type="button" class="btn btn-secondary">Eat a Cookie</button>
-                        <button type="button" class="btn btn-secondary">View Past Fortunes</button>
+                        <button [routerLink]="['/eat-cookie']" type="button" class="btn btn-secondary">Eat a Cookie</button>
+                        <button [routerLink]="['/pastFortunes']" type="button" class="btn btn-secondary">View Past Fortunes</button>
                         <button type="button" class="btn btn-secondary">Logout</button>
                     </div>
                 </div>

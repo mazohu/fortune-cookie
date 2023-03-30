@@ -1,0 +1,37 @@
+<!--This page needs to be made so that only logged in users can access it.
+    The write fortune can be a form that can only be submitted once
+    the receive needs to populate.-->
+
+    <div class="bg">
+        <div *ngIf="!user">
+            <nav class="navbar navbar-expand-lg navbar-dark bg-danger">
+                <span class="navbar-brand mb-0 h1">Fortune Cookie</span>
+                <button class="navbar-toggler" type="button"s data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                  <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                  <ul class="navbar-nav">
+                    <li class="nav-item active">
+                      <a [routerLink]="['']" class="nav-link" href="#">Home </a>
+                    </li>
+                    <li class="nav-item">
+                      <a [routerLink]="['/login']" class="nav-link" href="#">Login <span class="sr-only">(current)</span></a>
+                    </li>
+                    <!-- <li class="nav-item">
+                      <a class="nav-link disabled" href="#">Disabled</a>
+                    </li> -->
+                  </ul>
+                </div>
+              </nav>
+              <div style="text-align:left">
+                <br>
+                <div class="d-inline-flex p-2 bd-highlight text-danger bg-light"><h4>Sign in with Google first by Navigating to login ----></h4></div>
+              </div>
+            <p>{{ loggedIn }}</p>
+        </div>
+        <div *ngIf="user">
+            <p>Past Fortunes Works!
+            </p>
+        </div>
+    </div>
+    

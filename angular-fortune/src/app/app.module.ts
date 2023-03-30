@@ -12,11 +12,15 @@ import { AppComponent } from './app.component';
 
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
+import { EatcookieComponent } from './views/eatcookie/eatcookie.component';
+import { PastfortunesComponent } from './views/pastfortunes/pastfortunes.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     routingComponents,
+    EatcookieComponent,
+    PastfortunesComponent,
   ],
   imports: [
     BrowserModule,
