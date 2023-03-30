@@ -23,18 +23,19 @@ import (
   "time"
 )
 
-//this struct must stay here, in the main file
+//These structs establish a many-to-many relationship between the User and Fortune schemas
+//!BUG Foreign keys in the join table are not working as intended
 type User struct {
 	Username  string    `json:"username"`   //General Info about the User
 	Email string        `json:"email"`
-	UserID string       `gorm: primaryKey;json:"userid"`
-  Fortunes []Fortune `gorm:"many2many:user_fortunes;json:history"`			//Stores the FIDs of the user's received fortunes
+	ID string       `json:"userid; gorm:primaryKey"`
+  Fortunes []Fortune `json:"history gorm:many2many:users_fortunes;"`			//Stores the FIDs of the user's received fortunes
 	Submitted bool      `json:"submitted"`	//If a fortune has been submitted by them today.
 	LastTime time.Time  `json:"lasttime"`		//When the last fortune was submitted. Is used to find out if 24 hours has passed.
 }
 
 type Fortune struct {
-  FID uint32  `gorm: primaryKey`
+  ID uint32  `gorm:"primaryKey"`
   Author string //Keeping for now, but will need to make this a foreign key if we end up logging authors
   Content string
 }
@@ -49,12 +50,9 @@ func main() {
   
 	// Migrate the schema
 	db.AutoMigrate(&User{}, &Fortune{})
-
+  
   //Initialize struct variable
   var userPointer User
-  //*These are here so you can delete any possible rows if need be, restarting the database
-	db.Unscoped().Where("username = ?", "Misty").Delete(&userPointer)
-  db.Unscoped().Where("username = ?", "Alexia Rangel Krashenitsa").Delete(&userPointer)
 
 	app := fiber.New()
 
@@ -86,7 +84,7 @@ func main() {
 
   //This is how we add to the database
   app.Post("/api/user/populate", func(c *fiber.Ctx) error {
-    ourPerson := User{Username: "username", Email: "em", UserID: "uID", LastTime: time.Date(2002, time.January, 1, 23, 0, 0, 0, time.UTC)} //Don't update fortune history
+    ourPerson := User{Username: "username", Email: "em", ID: "uID", LastTime: time.Date(2002, time.January, 1, 23, 0, 0, 0, time.UTC)}
 
     if err := c.BodyParser(&ourPerson); err != nil {
 			return err
@@ -137,7 +135,7 @@ func main() {
     log.Println("This is the type of the new fortune", reflect.TypeOf(fortune.Content))
     log.Println("This is the new fortune:", fortune.Content)
     //Hash the fortune
-    newFortune := Fortune{FID:hashFortune(fortune.Content), Author: userPointer.UserID, Content: fortune.Content}
+    newFortune := Fortune{ID:hashFortune(fortune.Content), Author: userPointer.ID, Content: fortune.Content}
     //Add fortune to the database if the user has not already submitted
     if userPointer.Submitted == false {
       db.Create(&newFortune)
