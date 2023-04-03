@@ -45,12 +45,11 @@ func getUser(user *User)() {
 }
 
 //Updates the fortune database with a fortune only if the user has not yet submitted a fortune
-//TODO: Fix foreign key constraint violation when two similar fortunes are added
-//TODO: currentUser.Submitted is not always most recent value
 func submitFortune(content string)() {
+	temp := Fortune{}
 	fortune := Fortune{ID:hashFortune(content), Content:content}
 	if currentUser.Submitted == false {
-		db.Create(&fortune)
+		db.FirstOrCreate(&temp, fortune)
 		db.Model(&currentUser).Update("Submitted", true)
 	}
 }
@@ -101,12 +100,13 @@ func resetUserSubmitted()() {
 	db.Model(&currentUser).Update("Submitted", false)
 }
 
-func testDatabase(dbfile string, UID string, email string, name string){
+func testSubmit(dbfile string, UID string, email string, name string){
 	initStorage(dbfile)
 	testUser := User{ID:UID, Email: email, Username: name}
 	getUser(&testUser)
 	//Populate the database with default fortunes
 	defaultFortunes := [...]string{"Your future is bright.", "A wise person speaks little and listens much.", "You will receive an unexpected gift soon.", "Good things come to those who wait.", "The greatest risk is not taking one.", "You will soon have an opportunity to travel.", "A journey of a thousand miles begins with a single step.", "You will be rewarded for your hard work.", "You will make many new friends in the coming months.", "Good things come in small packages.", "You will find happiness in unexpected places.", "The best things in life are free.", "You will soon receive a promotion or job offer.", "Your luck is about to change for the better.", "You will be successful in all your endeavors.", "You will soon meet someone special.", "The sun always shines after a storm.", "You will achieve great things in life.", "You are destined for greatness.", "Your dreams will come true if you work hard and believe in yourself."}
+	//Submit 20 default fortunes
 	for _, v := range defaultFortunes {
 		resetUserSubmitted()
 		submitFortune(v)
@@ -115,6 +115,7 @@ func testDatabase(dbfile string, UID string, email string, name string){
 	fmt.Printf("%v\n", getFortunesNotReceived())
 	fmt.Println("List of fortunes in database before receiving 5 fortunes")
 	fmt.Printf("%v\n", getReceivedFortunes())
+	//Let user receive 5 fortunes
 	for i := 0; i < 5; i++ {
 		getRandomFortune()
 	}
