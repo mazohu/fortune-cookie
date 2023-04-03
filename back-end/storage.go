@@ -1,98 +1,130 @@
-/*
-& Notes about Databases now that I played with it
-	- Whenever we log in, a user ID will get passed into accessDatabase
-
-	- Then, we simply ask data base to find the userID that we passed in. 
-		*result = db.Find(&person, "user_id = ?", uID)
-		And we check the result to see if it exists
-		If it does, we will move on. If it doesn't, we create a new entry
-
-	- Notice, *person is a pointer. It points to the specified database entry
-	so we can make updates when we need to. 
-		*db.First(&person, "user_id = ?", uID)
-
-	- Also mini note, although the People struct has variable names, the
-	actual column names in the database are different. I don't know why, 
-	just look at the table and not your variables.
-
-& TO DO
-	- Need a way to add to the fortunes database
-	- Need a way to retrieve from the fortunes database 
-		- use random numbers 1 - length of database
-		- Need to make sure they don't receive their own fortunes
-	- Look into making the ids into primary keys
-*/
-
 package main
 
 import (
-	"log"
 	"time"
-	"fmt"
+	"math/rand"
 	"hash/fnv"
+	"fmt"
 
 	"gorm.io/gorm"
   	"gorm.io/driver/sqlite"
 )
 
-// type Users struct {
- 	//gorm.Model	
+var db *gorm.DB
+var currentUser User
 
-// 	Username  string    `json:"username"`   //General Info about the User
-// 	Email string        `json:"email"`
-// 	UserID string       `json:"userid"` //`gorm:"primaryKey;autoIncrement:false"` //-> tried this with test2.db
+type User struct {
+	Username  string    `json:"username"`
+	Email string        `json:"email"`
+	ID string       `json:"userid" gorm:"primaryKey"`
+	ReceivedFortunes []Fortune `json:"history" gorm:"many2many:user_fortunes"`  //Stores the FIDs of the user's received fortunes
+	Submitted bool      `json:"submitted" gorm:"default:false"`  //Flag for whether user has submitted daily fortune
+	LastTime time.Time  `json:"lasttime"`  //When the last fortune was submitted. Is used to find out if 24 hours has passed.
+}
 
-//   	Fid string          `json:"fid"`				//Stores the Ids of all the fortunes recieved, for history. It's in order.
-// 	Submitted bool      `json:"submitted"`	//If a fortune has been submitted by them today.
-// 	LastTime time.Time  `json:"lasttime"`		//When the last fortune was submitted. Is used to find out if 24 hours has passed.
+type Fortune struct {
+    ID uint32  `gorm:"primaryKey"`
+	Content string
+}
 
-//   }
+//Initialize the GORM model abstracting the database
+func initStorage(file string)() {
+	var err error
+	db, err = gorm.Open(sqlite.Open(file), &gorm.Config{})
+	if err != nil {
+		panic("Failed to connect to the database")
+	}
+	db.AutoMigrate(&User{}, &Fortune{})
+	//Lastly seed the random number generator
+	rand.Seed(time.Now().UnixNano())
+}
 
-// type Users struct {
-// 	//mirrors the real thing
-// 	Username  string    `json:"username"`   //General Info about the User
-// 	Email string        `json:"email"`
-// 	UserID string       `json:"userid"`		  //`gorm:"primaryKey;autoIncrement:false"` -> tried this with test2.db
-  
-// 	Fid string          `json:"fid"`				//Stores the Ids of all the fortunes recieved, for history. It's in order.
-// 	Submitted bool      `json:"submitted"`	//If a fortune has been submitted by them today.
-// 	LastTime time.Time  `json:"lasttime"`		//When the last fortune was submitted. Is used to find out if 24 hours has passed.
-//   }
+//Gets the current user or adds them to the database
+func getUser(user *User)() {
+	db.Omit("Fortunes").FirstOrCreate(&currentUser, user)
+}
 
-//   type Fortunes struct {
-// 	gorm.Model
+//Updates the fortune database with a fortune only if the user has not yet submitted a fortune
+//TODO: Fix foreign key constraint violation when two similar fortunes are added
+//TODO: currentUser.Submitted is not always most recent value
+func submitFortune(content string)() {
+	fortune := Fortune{ID:hashFortune(content), Content:content}
+	if currentUser.Submitted == false {
+		db.Create(&fortune)
+		db.Model(&currentUser).Update("Submitted", true)
+	}
+}
 
-// 	Fid string				//`gorm:"primaryKey;autoIncrement:false"`
-// 	Author string
-// 	Text string
-//   }
+//Returns a random fortune to the user which they have not already received
+//TODO: Handle errors
+func getRandomFortune()(Fortune) {
+	originalFortunes := getFortunesNotReceived()
+	//Get a random fortune from originalFortunes
+	fortune := originalFortunes[rand.Intn(len(originalFortunes)-1)]
+	//Update the user_fortunes table
+	db.Model(&currentUser).Association("ReceivedFortunes").Append(&fortune)
+	return fortune
+}
 
-/*	//& The main database functions are written below
-	Basically, one function retrieves the user pointer & db, and the
-	rest of the functions will accept a user pointer & db to do their
-	necessary operations
-*/
+//TODO: Handle errors
+func getReceivedFortunes()([]Fortune) {
+	receivedFortunes := []Fortune{}
+	db.Model(&currentUser).Association("ReceivedFortunes").Find(&receivedFortunes)
+	return receivedFortunes
+}
 
-func dataBaseTesting(username string, em string, uID string){
-	//retrieving the userPointer and corresponding database
-	var userPointer, userDB = getUserPointer(username, em, uID)
-		
-	printUserDatabase(userPointer)
+//Returns the list of fortunes not already received by the user
+//TODO: Handle errors
+func getFortunesNotReceived()([]Fortune) {
+	var originalFortunes []Fortune
+	db.Where("id NOT IN (?)", db.Table("user_fortunes").Select("fortune_id").Where("user_id = ?", currentUser.ID)).Find(&originalFortunes)
+	return originalFortunes
+}
 
-	// ~ Testing fortuneTimer
-	userPointer = fortuneTimerTesting(userPointer)
-	
-	//updating the entries in the database
-	updateUserDatabase(userPointer, userDB)
+//Generates the fortune ID
+func hashFortune(fortune string) (uint32) {
+	h := fnv.New32a()
+	h.Write([]byte(fortune))
+	return h.Sum32()
+}
 
-	//printUserDatabase(userPointer)
+//TODO: submitted field is not being updated
+//Reset all submitted to false
+func resetSubmitted()() {
+	//Batch updates without conditions are not permitted by GORM unless AllowGlobalUpdate is enabled or if using raw SQL
+	// db.Model(&User{}).Update("submitted", "false")
+	db.Exec("UPDATE users SET submitted = true")
+}
 
-	//userDB.Unscoped().Delete(&userPointer, 1)
-	//userDB.Unscoped().Delete(&userPointer, 2)
+//Resets current user's submitted flag for testing purposes
+func resetUserSubmitted()() {
+	db.Model(&currentUser).Update("Submitted", false)
+}
+
+func testDatabase(dbfile string, UID string, email string, name string){
+	initStorage(dbfile)
+	testUser := User{ID:UID, Email: email, Username: name}
+	getUser(&testUser)
+	//Populate the database with default fortunes
+	defaultFortunes := [...]string{"Your future is bright.", "A wise person speaks little and listens much.", "You will receive an unexpected gift soon.", "Good things come to those who wait.", "The greatest risk is not taking one.", "You will soon have an opportunity to travel.", "A journey of a thousand miles begins with a single step.", "You will be rewarded for your hard work.", "You will make many new friends in the coming months.", "Good things come in small packages.", "You will find happiness in unexpected places.", "The best things in life are free.", "You will soon receive a promotion or job offer.", "Your luck is about to change for the better.", "You will be successful in all your endeavors.", "You will soon meet someone special.", "The sun always shines after a storm.", "You will achieve great things in life.", "You are destined for greatness.", "Your dreams will come true if you work hard and believe in yourself."}
+	for _, v := range defaultFortunes {
+		resetUserSubmitted()
+		submitFortune(v)
+	}
+	fmt.Println("List of fortunes in database after adding defaults")
+	fmt.Printf("%v\n", getFortunesNotReceived())
+	fmt.Println("List of fortunes in database before receiving 5 fortunes")
+	fmt.Printf("%v\n", getReceivedFortunes())
+	for i := 0; i < 5; i++ {
+		getRandomFortune()
+	}
+	fmt.Println("currentUser's history of received fortunes after receiving 5 fortunes")
+	fmt.Printf("%v\n", getReceivedFortunes())
+	fmt.Printf("%#v", currentUser)
 }
 
 //for accessing the user pointer
-func getUserPointer(username string, em string, uID string) (Users, *gorm.DB){
+func getUserPointer(username string, em string, uID string) (User, *gorm.DB){
 	
 	//opening the test database
 	db, err := gorm.Open(sqlite.Open("test3.db"), &gorm.Config{})
@@ -101,13 +133,13 @@ func getUserPointer(username string, em string, uID string) (Users, *gorm.DB){
 	}
   
 	// Migrate the schema
-	db.AutoMigrate(&Users{})
+	db.AutoMigrate(&User{})
 
 	//Initialize struct variable
-	var userPointer Users
+	var userPointer User
 	
 	//Create empty version just in case 
-	ourPerson := Users{Username: username, Email: em, UserID: uID, Fid: "", Submitted: true, LastTime: time.Date(2002, time.January, 1, 23, 0, 0, 0, time.UTC)}
+	ourPerson := User{Username: username, Email: em, ID: uID, Submitted: true, LastTime: time.Date(2002, time.January, 1, 23, 0, 0, 0, time.UTC)}
 
 	//Check if we have this user in the database already, or if we need to make a new row
 	result := db.Find(&userPointer, "user_id = ?", uID)
@@ -122,50 +154,14 @@ func getUserPointer(username string, em string, uID string) (Users, *gorm.DB){
 
 }
 
-//updates all changeable variables the database (Submitted, Fid, and LastTime) 
-func updateUserDatabase(userPointer Users, db *gorm.DB){
-	db.Model(&userPointer).Update("submitted", userPointer.Submitted)
-	db.Model(&userPointer).Update("fid", userPointer.Fid)
-	db.Model(&userPointer).Update("last_time", userPointer.LastTime)
-}
-
-//print function for testing! 
-func printUserDatabase(userPointer Users){
-
-	log.Println()
-	log.Println(userPointer.Username, "is my database Username")
-	log.Println(userPointer.UserID, "is my database UserID")
-	log.Println(userPointer.Email, "is my database Email")
-	log.Println(userPointer.Fid, "is my database Fid")
-	log.Println(userPointer.Submitted, " is my database Submitted")
-	log.Println(userPointer.LastTime, " is my database LastTime")
-	log.Println()
-	//log.Println(userPointer.ID, " is my database primary key (?)")
-	
-}
-
-//deleting one to see if primary keys work
-func deleteRow(userPointer Users, theID uint, db *gorm.DB){
-	//pointer has to point to the id for this to work
-	db.Unscoped().Delete(&userPointer, theID)
-}
-
-//Declared in main.go temporarily
-// // Generates the fortune ID
-// func hashFortune(fortune string) (string) {
-// 	h := fnv.New32a()
-// 	h.Write([]byte(fortune))
-// 	return fmt.Sprint(h.Sum32())
-// }
-
 //For testing the fortuneTimer
-func fortuneTimerTesting(userPointer Users) (Users){
+func fortuneTimerTesting(userPointer User) (User){
 	userPointer = submittedCheck(userPointer)
 	return userPointer
 }
 
 //will check if the date has changed and updates Submitted Accordingly
-func submittedCheck(userPointer Users) (Users){
+func submittedCheck(userPointer User) (User){
 	var hasChanged bool = false
 	hasChanged = checkTime(userPointer)
 
@@ -182,38 +178,3 @@ func submittedCheck(userPointer Users) (Users){
 
 	return userPointer
 }
-
-//Will update LastTime and Submitted, for when a fortune is submitted
-func fortuneSubmitted(userPointer Users, db *gorm.DB){
-	userPointer.LastTime = updateTime(userPointer)
-	userPointer.Submitted = false
-
-	db.Model(&userPointer).Update("submitted", userPointer.Submitted)
-	db.Model(&userPointer).Update("last_time", userPointer.LastTime)
-}
-
-//Will take fortune IDs
-
-/*
-& Unused commands that can come in handy later
-	
-	* Delete - PERMANANTLY delete person (by ID)
-	db.Unscoped().Delete(&person, 1)
-	db.Unscoped().Delete(&person, 2)
-	db.Unscoped().Delete(&person, 3)
-	db.Unscoped().Delete(&person, 4)
-	db.Unscoped().Delete(&person, 5)
-	db.Unscoped().Delete(&person, 6)
-
-	* Update - update temp to 10
-	db.Model(&person).Update("Temp", 10)
-
-	* Read what has the current user_id and store pointer to object in person
-  	db.First(&person, "user_id = ?", uID)
-
-	* Create
-	db.Create(&People{Username: user, Email: em, UserID: uID, Temp: 5})
-
-	* Below is any old functions we will ignore now and delete later
-	
-*/

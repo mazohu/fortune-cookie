@@ -6,7 +6,7 @@ import (
 )
 
 //checks if the time has changed
-func checkTime(userPointer Users)(bool){
+func checkTime(userPointer User)(bool){
 	currentTime := time.Now()
 	//log.Println()
 	//log.Println("The current time is", currentTime)
@@ -26,6 +26,6 @@ func checkTime(userPointer Users)(bool){
 	}
 }
 
-func updateTime(userPointer Users) time.Time {
+func updateTime(userPointer User) time.Time {
 	return time.Now()
 }
