@@ -100,7 +100,7 @@ func resetUserSubmitted()() {
 	db.Model(&currentUser).Update("Submitted", false)
 }
 
-func testSubmit(dbfile string, UID string, email string, name string){
+func testDatabase(dbfile string, UID string, email string, name string){
 	initStorage(dbfile)
 	testUser := User{ID:UID, Email: email, Username: name}
 	getUser(&testUser)
