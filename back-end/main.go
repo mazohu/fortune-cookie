@@ -8,130 +8,123 @@
 package main
 
 import (
-	// "github.com/gofiber/fiber/v2"
-	// "github.com/gofiber/fiber/v2/middleware/cors"
-	// "github.com/pusher/pusher-http-go/v5"
+	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/cors"
+	"github.com/pusher/pusher-http-go/v5"
+  store "ourProject/storage"
 
-  // "fmt"
-  // "log"
-  // "time"
+  "fmt"
+  "log"
+  "time"
 )
 
-//These structs establish a many-to-many relationship between the User and Fortune schemas
 func main() {
-  //Unit tests
-  // testDatabase("bigg_test.db", "20872307863031084440", "dummy@gmail.com", "maria")
-  // testGetUser("abcd.db", "20872307863031084440", "dummy@gmail.com", "maria")
-  // submitFortune("Newest fortune!")
-  // testGetUser("abcd.db", "4331420171203007292", "dumdum@gmail.com", "evil maria")
-  // testGetUser("abcd.db", "20872307863031084441", "newgirl@gmail.com", "toronto")
-  // testScheduledReset("Testing!")
-  //opening the test database
-	// initStorage("test_fortunes.db")
+  //Opening the test database
+	store.InitStorage("test_fortunes.db")
 
-	// app := fiber.New()
+	app := fiber.New()
 
-	// app.Use(cors.New())
+	app.Use(cors.New())
 
-  // pusherClient := pusher.Client{
-  //   AppID: "1564067",
-  //   Key: "a621a1a5218dda4b051a",
-  //   Secret: "b73ef85082132de68896",
-  //   Cluster: "us2",
-  //   Secure: true,
-  // }
+  pusherClient := pusher.Client{
+    AppID: "1564067",
+    Key: "a621a1a5218dda4b051a",
+    Secret: "b73ef85082132de68896",
+    Cluster: "us2",
+    Secure: true,
+  }
 
-  // app.Post("/api/messages", func(c *fiber.Ctx) error {
-	// 	var data map[string]string
+  app.Post("/api/messages", func(c *fiber.Ctx) error {
+		var data map[string]string
 
-	// 	if err := c.BodyParser(&data); err != nil {
-	// 		return err
-	// 	}
+		if err := c.BodyParser(&data); err != nil {
+			return err
+		}
 
-  //   //The channel is "chat", the event is "message", the data we want to send is "data"
-	// 	err := pusherClient.Trigger("chat", "message", data)
-  //   if err != nil {
-  //     fmt.Println(err.Error())
-  //   }
+    //The channel is "chat", the event is "message", the data we want to send is "data"
+		err := pusherClient.Trigger("chat", "message", data)
+    if err != nil {
+      fmt.Println(err.Error())
+    }
 
-	// 	return c.JSON([]string{})
-	// })
+		return c.JSON([]string{})
+	})
 
-  // //This is how we add to the database
-  // app.Post("/api/user/populate", func(c *fiber.Ctx) error {
-  //   user := User{Username: "username", Email: "em", ID: "uID", LastTime: time.Date(2002, time.January, 1, 23, 0, 0, 0, time.UTC)}
+  //This is how we add to the database
+  app.Post("/api/user/populate", func(c *fiber.Ctx) error {
+    user := store.User{Username: "username", Email: "em", ID: "uID", LastTime: time.Date(2002, time.January, 1, 23, 0, 0, 0, time.UTC)}
 
-  //   if err := c.BodyParser(&user); err != nil {
-	// 		return err
-	// 	}
+    if err := c.BodyParser(&user); err != nil {
+			return err
+		}
 
-  //   //Receiving the username, email, and userID info from frontend and putting it into our struct
-	// 	err := pusherClient.Trigger("userpage", "login", user)
-  //   if err != nil {
-  //     fmt.Println(err.Error())
-  //   }
+    //Receiving the username, email, and userID info from frontend and putting it into our struct
+		err := pusherClient.Trigger("userpage", "login", user)
+    if err != nil {
+      fmt.Println(err.Error())
+    }
 
-  //   getUser(user)
+    store.GetUser(user)
 
-  //   return c.JSON(fiber.Map{
-  //     "message": "Success!",
-  //   })
+    return c.JSON(fiber.Map{
+      "message": "Success!",
+    })
 
-	// })
+	})
 
-  // //This is how to submit a fortune to the fortune database
-  // app.Post("/api/user/submitFortune", func(c *fiber.Ctx) error {
-  //   //Temporary struct for holding the fortune content submitted by the user
-  //   fortune := struct {
-  //     Content string   `json:"newfortune"`
-  //   }{}
+  //This is how to submit a fortune to the fortune database
+  app.Post("/api/user/submitFortune", func(c *fiber.Ctx) error {
+    //Temporary struct for holding the fortune content submitted by the user
+    fortune := struct {
+      Content string   `json:"newfortune"`
+    }{}
 
-  //   if err := c.BodyParser(&fortune); err != nil {
-	// 		return err
-	// 	}
+    if err := c.BodyParser(&fortune); err != nil {
+			return err
+		}
 
-  //   //Receive the fortune content from the client
-	// 	err := pusherClient.Trigger("userpage", "submitFortune", fortune)
-  //   if err != nil {
-  //     fmt.Println(err.Error())
-  //   }
+    //Receive the fortune content from the client
+		err := pusherClient.Trigger("userpage", "submitFortune", fortune)
+    if err != nil {
+      fmt.Println(err.Error())
+    }
 
-  //   log.Println("This is the new fortune:", fortune.Content)
-  //   if submitFortune(fortune.Content) == -1 {
-  //     log.Println("User has already submitted fortune today")
-  //   }
+    log.Println("This is the new fortune:", fortune.Content)
+    if store.SubmitFortune(fortune.Content) != nil {
+      log.Println(err.Error())
+    }
 
-  //   return c.JSON(fiber.Map{
-  //     "message": "success!",
-  //   })
-	// })
+    return c.JSON(fiber.Map{
+      "message": "success!",
+    })
+	})
 
-  // //This is how we show what's in the database to the frontend
-  // app.Get("/api/user/frontend/fid", func(c *fiber.Ctx) error {
-  //   //Sending the information over by json-ing the pointer info
-  //   return c.JSON(getReceivedFortunes)
-	// })
+  //This is how we show what's in the database to the frontend
+  app.Get("/api/user/frontend/fid", func(c *fiber.Ctx) error {
+    //Sending the information over by json-ing the pointer info
+    return c.JSON(store.GetReceivedFortunes)
+	})
 
-  //  //This is how we show what's in the database to the frontend
-  //  app.Get("/api/user/frontend/submitted", func(c *fiber.Ctx) error {
+   //This is how we show what's in the database to the frontend
+   app.Get("/api/user/frontend/submitted", func(c *fiber.Ctx) error {
 
-  //   log.Println("This is my user:", currentUser.Username)
-  //   log.Println("This is the submitted:", currentUser.Submitted)
+    log.Println("This is my user:", store.CurrentUser.Username)
+    log.Println("This is the submitted:", store.CurrentUser.Submitted)
 
-  //   //sending the information over by json-ing the pointer info
-  //   return c.JSON(currentUser.Submitted)
+    //sending the information over by json-ing the pointer info
+    return c.JSON(store.CurrentUser.Submitted)
 
-	// })
+	})
 
-  //  //This is how we show what's in the database to the frontend
-  //  app.Get("/api/user/frontend/lastTime", func(c *fiber.Ctx) error {
+   //This is how we show what's in the database to the frontend
+   app.Get("/api/user/frontend/lastTime", func(c *fiber.Ctx) error {
 
-  //   //sending the information over by json-ing the pointer info
-  //   return c.JSON(currentUser.LastTime)
+    //sending the information over by json-ing the pointer info
+    return c.JSON(store.CurrentUser.LastTime)
 
-	// })
+	})
   
-  // //* Front end and Back end runs on different ports
-  // //This needs to be the case for front end to request from backend. 
-	// app.Listen(":8000")
+  //* Front end and Back end runs on different ports
+  //This needs to be the case for front end to request from backend. 
+	app.Listen(":8000")
 }
