@@ -26,6 +26,9 @@ func main() {
   //opening the test database
 	initStorage("test_fortunes.db")
 
+  //*These are here so you can delete any possible rows if need be, restarting the database
+  clearDatabase()
+
 	app := fiber.New()
 
 	app.Use(cors.New())
@@ -79,7 +82,7 @@ func main() {
     }
 
     log.Println("This is the new fortune:", fortune.Content)
-    if (submitFortune(fortune.Content) == false) {
+    if !submitFortune(fortune.Content) {
       log.Println("User has already submitted fortune today")
     }
 

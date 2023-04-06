@@ -55,6 +55,12 @@ func submitFortune(content string)(bool){
 	}else {return false}
 }
 
+//Updates the fortune database with a fortune only if the user has not yet submitted a fortune
+func clearDatabase()(){
+	db.Unscoped().Where("username = ?", "Misty").Delete(&currentUser)
+ 	db.Unscoped().Where("username = ?", "Alexia Rangel Krashenitsa").Delete(&currentUser)
+}
+
 //Returns a random fortune to the user which they have not already received
 //TODO: Handle errors
 func getRandomFortune()(Fortune) {
