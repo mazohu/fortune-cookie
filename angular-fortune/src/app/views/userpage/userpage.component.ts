@@ -13,7 +13,6 @@ import {HttpClient} from "@angular/common/http";
 })
 
 export class UserpageComponent{
-
   user:any;
   loggedIn:any;
 
