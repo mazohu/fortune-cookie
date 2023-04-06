@@ -45,13 +45,14 @@ func getUser(user *User)() {
 }
 
 //Updates the fortune database with a fortune only if the user has not yet submitted a fortune
-func submitFortune(content string)() {
+func submitFortune(content string)(bool){
 	temp := Fortune{}
 	fortune := Fortune{ID:hashFortune(content), Content:content}
 	if currentUser.Submitted == false {
 		db.FirstOrCreate(&temp, fortune)
 		db.Model(&currentUser).Update("Submitted", true)
-	}
+		return true
+	}else {return false}
 }
 
 //Returns a random fortune to the user which they have not already received

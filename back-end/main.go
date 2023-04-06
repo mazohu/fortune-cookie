@@ -19,7 +19,10 @@ import (
 
 //These structs establish a many-to-many relationship between the User and Fortune schemas
 func main() {
-  testDatabase("small_test.db", "20872307863031084440", "dummy@gmail.com", "maria")
+  //* Testing:
+  //testDatabase("small_test.db", "20872307863031084440", "dummy@gmail.com", "maria")
+
+  //* Normal Database
   //opening the test database
 	initStorage("test_fortunes.db")
 
@@ -35,22 +38,6 @@ func main() {
     Secure: true,
   }
 
-  app.Post("/api/messages", func(c *fiber.Ctx) error {
-		var data map[string]string
-
-		if err := c.BodyParser(&data); err != nil {
-			return err
-		}
-
-    //The channel is "chat", the event is "message", the data we want to send is "data"
-		err := pusherClient.Trigger("chat", "message", data)
-    if err != nil {
-      fmt.Println(err.Error())
-    }
-
-		return c.JSON([]string{})
-	})
-
   //This is how we add to the database
   app.Post("/api/user/populate", func(c *fiber.Ctx) error {
     user := User{Username: "username", Email: "em", ID: "uID", LastTime: time.Date(2002, time.January, 1, 23, 0, 0, 0, time.UTC)}
@@ -65,6 +52,7 @@ func main() {
       fmt.Println(err.Error())
     }
 
+    //adding to the database, and/or recieving
     getUser(&user)
 
     return c.JSON(fiber.Map{
@@ -91,7 +79,7 @@ func main() {
     }
 
     log.Println("This is the new fortune:", fortune.Content)
-    if submitFortune(fortune.Content) == -1 {
+    if (submitFortune(fortune.Content) == false) {
       log.Println("User has already submitted fortune today")
     }
 

@@ -13,6 +13,7 @@ import {HttpClient} from "@angular/common/http";
 })
 
 export class UserpageComponent{
+
   user:any;
   loggedIn:any;
 
@@ -20,13 +21,7 @@ export class UserpageComponent{
   fid : string[] = [];
   submitted : boolean = false;
   lasttime : any = '';
-
-  //this username is FAKE don't even think about it
-  username : any = 'username';
-  message : any = '';
-  messages : any[] = [];
-
-  newFortune : string = 'Hellooo';
+  newFortune : string = '';
 
   constructor(private authService: SocialAuthService, private http: HttpClient){}
 
@@ -40,19 +35,6 @@ export class UserpageComponent{
     const pusher = new Pusher('a621a1a5218dda4b051a', {
       cluster: 'us2'
     });
-
-    //the channel is chat
-    const channel = pusher.subscribe('chat');
-
-    //the event is 'message'
-    channel.bind('message', (data : any) => {
-      this.messages.push(data)
-      //alert(JSON.stringify(data));
-    });
-
-    for(let i=0 ; i < this.messages.length ; i++){  //How to properly iterate here!!
-      console.log(this.messages[i])
-    }
 
     //updating values only if the user is logged in.
     if (this.loggedIn){
@@ -71,19 +53,19 @@ export class UserpageComponent{
     //will get the variables from backend. res is the response
 
     //the get request below is for receiving the last fortune.
-    //!Eventually, replace this with all the fortunes. Later we can have a get request for updating this from the backend and it'll be easier
-    this.http.get('http://localhost:8000/api/user/frontend/fid').subscribe(
-      (data : any) => {
-        //if the array is empty, add the first item
-        if (!this.fid.length){
-          this.fid.push(data);
-        }
-        //if its not empty, it checks if the last item is the same
-        else if (data != this.fid[this.fid.length - 1]){
-          this.fid.push(data);
-        }
-      }
-    );
+    // //!Eventually, replace this with all the fortunes. Later we can have a get request for updating this from the backend and it'll be easier
+    // this.http.get('http://localhost:8000/api/user/frontend/fid').subscribe(
+    //   (data : any) => {
+    //     //if the array is empty, add the first item
+    //     if (!this.fid.length){
+    //       this.fid.push(data);
+    //     }
+    //     //if its not empty, it checks if the last item is the same
+    //     else if (data != this.fid[this.fid.length - 1]){
+    //       this.fid.push(data);
+    //     }
+    //   }
+    // );
     // this.http.get('http://localhost:8000/api/user/frontend/fid').subscribe(
     //   (data : any) => {
     //     this.fid.push(data);
@@ -109,14 +91,12 @@ export class UserpageComponent{
 
   }
   submit(): void {
-
     if (!this.submitted){
       //when submitted is false, you're able to submit a fortune
       //updating values only if the user is logged in.
         this.http.post('http://localhost:8000/api/user/submitFortune', {
-          //When submit is called, it will sent this username and message to the backend. 
+          //When submit is called, it will sent this usename and message to the backend. 
           //!Later find a way to input a new fortune and submit it here
-          //userid: this.user.id,
           newfortune: this.newFortune
         }).subscribe();
         this.newFortune = "Our Fortune was Submitted"
@@ -125,5 +105,9 @@ export class UserpageComponent{
       alert(JSON.stringify("You can't get another fortune dummy"));
     }
 
+  }
+
+  changeFortune(e : any) {
+    this.newFortune = e.target.value;
   }
 }

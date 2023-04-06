@@ -1,35 +1,40 @@
-    <div *ngIf="!user">
-        <h4>Sign in with Google first by Navigating to login</h4>
-        <p>{{ loggedIn }}</p>
-    </div>
-    <div *ngIf="user">
-        <img src="{{ user.photoUrl }}">
-        <div>
-        <h4>My name is {{ user.name }}</h4>
-        <p>{{ user.email }}</p>
-        <p>{{ user.id }}</p>
-        <p>{{ loggedIn }}</p>
-        </div>
-        <div>
-            <button type="button" (click)="getData()">
-                Click this button to get info from the database about this user (Just as an example)
-            </button>
-            <p>for your information, submitted is... {{ submitted }}</p>
-        </div>
-        <div *ngIf="submitted">
-            <p>each fid is... </p>
-            <div *ngFor="let fortune of fid">
-                <p> - "{{ fortune }}"</p>
-            </div>
-            <p>submitted is {{ submitted }}</p>
-            <p>last time is {{ lasttime }}</p>
-        </div>
-        <div>
-            <button type="button" (click)="submit()">
-                Click this button to pretend you're submitting a fortune
-            </button>
-            <p>for your information, the fortune we have stored is... {{ newFortune }}</p>
-        </div>
-    </div>
+<div *ngIf="!user">
+    <h4>Sign in with Google first by Navigating to login</h4>
+    <p>{{ loggedIn }}</p>
+</div>
 
-    
+<div *ngIf="user">
+    <img src="{{ user.photoUrl }}">
+    <div>
+    <h4>My name is {{ user.name }}</h4>
+    <p>{{ user.email }}</p>
+    <p>{{ user.id }}</p>
+    <p>{{ loggedIn }}</p>
+    </div>
+    <div>
+        <button type="button" (click)="getData()">
+            Click this button to get info from the database about this user (Just as an example)
+        </button>
+        <p>for your information, submitted is... {{ submitted }}</p>
+    </div>
+    <div *ngIf="submitted">
+        <p>each fid is... </p>
+        <div *ngFor="let fortune of fid">
+            <p> - "{{ fortune }}"</p>
+        </div>
+        <p>submitted is {{ submitted }}</p>
+        <p>last time is {{ lasttime }}</p>
+    </div>
+    <div>
+        <!-- <button type="button" (click)="submit()">
+            Click this button to pretend you're submitting a fortune
+        </button>
+        <p>for your information, the fortune we have stored is... {{ newFortune }}</p> -->
+        <form (submit)="submit()">
+            <input type="text" class="form-control" placeholder="Submit a Fortune"
+              (change)="changeFortune($event)"
+            />
+            <p>You entered {{newFortune}}</p>
+          </form>
+    </div>
+</div>
