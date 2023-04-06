@@ -2,7 +2,12 @@
 To run the server, run the following commands from `fortune-cookie` folder
 ```
 cd back-end
-go run .
+go run main.go
+```
+To run the storage unit tests, run the following commands from `fortune-cookie/back-end` folder
+```
+cd storage
+go test -v
 ```
 ### Model Tags
 When defining `json` and `gorm` metadata on struct members, the metadata is written in order like this:
@@ -24,3 +29,23 @@ For many-to-many associations, the join-table owns the foreign keys referring to
 : The primary key of the current schema linked by the join-table's `foreignKey`
 `joinReferences`
 : The primary key of the associated schema linked by the join-table's `joinForeignKey`
+## Regarding Golang time package
+- "Time values should not be used as map or database keys without first guaranteeing that the identical Location has been set for all values, which can be achieved through use of the UTC or Local method"
+- Also worth noting that "local time" is based on the server's system clock, not the client's, so all database times are recorded in reference to the server's timezone
+## Golang functions
+- Public vs private
+  - Golang has "exported" and "unexported" package members
+  - Exported members are analogous to public members (can be accessed outside their package)
+    - Public functions begin with an uppercase letter (e.g. `GetUser()(){}`)
+  - Unexported members are like private members (can only be accessed inside their package)
+    - Unexported functions begin with a lowercase letter (e.g. `canSubmit()(){}`)
+
+## CL arguments
+To access command line arguments, first import os package
+`import "os"`
+Then get the arguments in a slice
+```golang
+args := os.Args[1:]
+fmt.Println(args[0]) //Prints the first argument
+```
+Note that the first argument is always the filename, so the slice `args` begins at the first actual argument

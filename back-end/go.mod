@@ -3,7 +3,9 @@ module ourProject
 go 1.20
 
 require (
+	github.com/davecgh/go-spew v1.1.1
 	github.com/gofiber/fiber/v2 v2.43.0
+	github.com/google/go-cmp v0.5.9
 	github.com/pusher/pusher-http-go/v5 v5.1.1
 	gorm.io/driver/sqlite v1.4.4
 	gorm.io/gorm v1.24.6
@@ -11,7 +13,6 @@ require (
 
 require (
 	github.com/andybalholm/brotli v1.0.5 // indirect
-	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/google/uuid v1.3.0 // indirect
 	github.com/jinzhu/inflection v1.0.0 // indirect
 	github.com/jinzhu/now v1.1.5 // indirect
