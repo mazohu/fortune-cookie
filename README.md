@@ -24,3 +24,6 @@ For many-to-many associations, the join-table owns the foreign keys referring to
 : The primary key of the current schema linked by the join-table's `foreignKey`
 `joinReferences`
 : The primary key of the associated schema linked by the join-table's `joinForeignKey`
+## Regarding Golang time package
+- "Time values should not be used as map or database keys without first guaranteeing that the identical Location has been set for all values, which can be achieved through use of the UTC or Local method"
+- Also worth noting that "local time" is based on the server's system clock, not the client's, so all database times are recorded in reference to the server's timezone

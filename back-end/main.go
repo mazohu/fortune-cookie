@@ -19,8 +19,14 @@ import (
 
 //These structs establish a many-to-many relationship between the User and Fortune schemas
 func main() {
-  testDatabase("small_test.db", "20872307863031084440", "dummy@gmail.com", "maria")
-  // //opening the test database
+  //Unit tests
+  // testDatabase("bigg_test.db", "20872307863031084440", "dummy@gmail.com", "maria")
+  // testGetUser("abcd.db", "20872307863031084440", "dummy@gmail.com", "maria")
+  // submitFortune("Newest fortune!")
+  // testGetUser("abcd.db", "4331420171203007292", "dumdum@gmail.com", "evil maria")
+  // testGetUser("abcd.db", "20872307863031084441", "newgirl@gmail.com", "toronto")
+  // testScheduledReset("Testing!")
+  //opening the test database
 	// initStorage("test_fortunes.db")
 
 	// app := fiber.New()
@@ -65,7 +71,7 @@ func main() {
   //     fmt.Println(err.Error())
   //   }
 
-  //   getUser(&user)
+  //   getUser(user)
 
   //   return c.JSON(fiber.Map{
   //     "message": "Success!",
