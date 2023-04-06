@@ -40,8 +40,10 @@ func initStorage(file string)() {
 }
 
 //Gets the current user or adds them to the database
-func getUser(user *User)() {
-	db.Omit("Fortunes").FirstOrCreate(&currentUser, user)
+func getUser(user User)() {
+    //FirstOrCreate() returns record matching primary key of the first parameter or creates the record with the attributes of the second parameter
+    currentUser = user
+    db.Omit("Fortunes").FirstOrCreate(&currentUser, user)
 }
 
 //Updates the fortune database with a fortune only if the user has not yet submitted a fortune
@@ -110,7 +112,7 @@ func resetUserSubmitted()() {
 func testDatabase(dbfile string, UID string, email string, name string){
 	initStorage(dbfile)
 	testUser := User{ID:UID, Email: email, Username: name}
-	getUser(&testUser)
+	getUser(testUser)
 	//Populate the database with default fortunes
 	defaultFortunes := [...]string{"Your future is bright.", "A wise person speaks little and listens much.", "You will receive an unexpected gift soon.", "Good things come to those who wait.", "The greatest risk is not taking one.", "You will soon have an opportunity to travel.", "A journey of a thousand miles begins with a single step.", "You will be rewarded for your hard work.", "You will make many new friends in the coming months.", "Good things come in small packages.", "You will find happiness in unexpected places.", "The best things in life are free.", "You will soon receive a promotion or job offer.", "Your luck is about to change for the better.", "You will be successful in all your endeavors.", "You will soon meet someone special.", "The sun always shines after a storm.", "You will achieve great things in life.", "You are destined for greatness.", "Your dreams will come true if you work hard and believe in yourself."}
 	//Submit 20 default fortunes

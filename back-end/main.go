@@ -56,7 +56,7 @@ func main() {
     }
 
     //adding to the database, and/or recieving
-    getUser(&user)
+    getUser(user)
 
     return c.JSON(fiber.Map{
       "message": "Success!",
