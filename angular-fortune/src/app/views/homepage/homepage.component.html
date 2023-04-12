@@ -1,11 +1,76 @@
-<div style="text-align:center">
-    <h1>
-      Routing and Navigation
-    </h1>
-    <p>homepage works!</p>
-  </div>
 
+<div class="bg">
+  <nav class="navbar navbar-expand-lg navbar-dark bg-danger">
+    <span class="navbar-brand mb-0 h1">Fortune Cookie</span>
+    <button class="navbar-toggler" type="button"s data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav">
+        <li class="nav-item active">
+          <a [routerLink]="['']" class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+        </li>
+        <li class="nav-item">
+          <a [routerLink]="['/login']" class="nav-link" href="#">Login</a>
+        </li>
+        <!-- <li class="nav-item">
+          <a class="nav-link disabled" href="#">Disabled</a>
+        </li> -->
+      </ul>
+    </div>
+  </nav>
+
+  <!--Starting the heading for fortune cookie here-->
+  <div class="container-fluid">
+    <div style="text-align:center">
+      <button class="button button4">Welcome to Fortune Cookie</button>
+    </div>
+    <div style="text-align:center">
+      <div class="d-inline-flex p-2 bd-highlight text-danger bg-light">Write and recieve daily fortunes. Share with friends! Test your luck if you dare...</div>
+    </div>
+  </div>>
+  <!--about the webapp-->
   <div class="container">
+      <div class="d-flex flex-row flex-shrink-0 bg-white">
+        <div class=" col-lg-6 align-items-center flex-shrink-0 p-3 link-dark text-decoration-none border-bottom"> 
+          <h3>
+            About Fortune Cookie
+          </h3>
+            <p class="lead">
+            Inspired by a class assignment, the team behind fortune cookie wants to provide a fun,
+            lighthearted user experience that people of all ages can enjoy.
+          </p>
+          <br>
+          <br>
+          <br>
+          <br>
+          <br>
+          <br>
+          <p>
+            It really isn't about the fortunes themselves, but the conversations created around them.
+            Fortune Cookie is free to sign-up. We won't share your personal info with anybody. 
+            </p>
+        </div>
+        <div class=" col-lg-6 flex-shrink-0 p-3 link-dark text-decoration-none border-bottom">
+          <div class="card" style="width: 18rem;">
+            <img class="card-img-top" src="https://img.freepik.com/free-vector/hand-drawn-fortune-cookie-illustration_23-2149243116.jpg?/100px180/" alt="Card image cap">
+            </div>
+          <div class="card-body">
+            <h5 class="card-title">Sign Up Today!</h5>
+            <p class="card-text">Once you sign-up,
+              you'll be able to start receiving and sharing fortunes right away! New fortunes are available every 24 hours.</p>
+            <a [routerLink]="['/login']" href="#" class="btn btn-primary">Sign up</a>
+          </div>
+        </div>
+        <div class=" col-lg-6 flex-shrink-0 p-3 link-dark text-decoration-none border-bottom">
+          <div class="card" style="width: 10rem;">
+            <img class="card-img-top" src="https://img.freepik.com/free-vector/hand-drawn-fortune-cookie-illustration_23-2149243116.jpg?/100px180/" alt="Card image cap">
+            </div>
+          </div>
+        </div>
+  </div>
+  </div>
+  <!-- <div class="container">
     <div class="d-flex flex-column align-items-stretch flex-shrink-0 bg-white">
       <div class="d-flex align-items-center flex-shrink-0 p-3 link-dark text-decoration-none border-bottom">
         <input class="fs-5 fw-semibold" [(ngModel)]="username"/>
@@ -28,10 +93,7 @@
       <p>You entered {{message}}</p>
     </form>
   </div>
-  
-  <nav>
-    <a routerLink="/login" routerLinkActive="active">Login</a>
-  </nav>
+</div> -->
   
   <router-outlet></router-outlet>
   <!-- Router views go here --> 

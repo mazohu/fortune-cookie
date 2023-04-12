@@ -1,1 +1,32 @@
 /* You can add global styles to this file, and also import other style files */
+.button {
+    background-color: #ff4444;
+    border: none;
+    color: white;
+    padding: 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    margin: 4px 2px;
+  }
+  
+  .button1 {border-radius: 2px;}
+  .button2 {border-radius: 4px;}
+  .button3 {border-radius: 12px; font-size: 18px;}
+  .button4 {border-radius: 12px; font-size: 44px;}
+  .button5 {border-radius: 50%;}
+  body,
+html {
+  height: 100%;
+}
+
+.bg {
+  /* The image used */
+  background-image: url("https://img.freepik.com/free-vector/hand-drawn-fortune-cookie-pattern_23-2149247689.jpg?w=2000");
+  /* Full height */
+  height: 100%;
+  /* Center and scale the image nicely */
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
