@@ -30,8 +30,13 @@
         <p>{{ loggedIn }}</p>
     </div>
     <div *ngIf="user">
-        <p>Write your fortune here:
-            Receive your fortune here!
-        </p>
+      <div>
+        <form (submit)="submit()">
+            <input type="text" class="form-control" placeholder="Submit a Fortune"
+              (change)="changeFortune($event)"
+            />
+            <p>You entered {{newFortune}}</p>
+          </form>
+      </div>
     </div>
 </div>

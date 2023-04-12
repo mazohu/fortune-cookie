@@ -16,13 +16,7 @@ export class EatcookieComponent {
   fid : string[] = [];
   submitted : boolean = false;
   lasttime : any = '';
-
-  //this username is FAKE don't even think about it
-  username : any = 'username';
-  message : any = '';
-  messages : any[] = [];
-
-  newFortune : string = 'Hellooo';
+  newFortune : string = '';
 
   constructor(private authService: SocialAuthService, private http: HttpClient){}
 
@@ -60,4 +54,26 @@ export class EatcookieComponent {
       }).subscribe();
     }
   }
+
+  submit(): void {
+    if (!this.submitted){
+      //when submitted is false, you're able to submit a fortune
+      //updating values only if the user is logged in.
+        this.http.post('http://localhost:8000/api/user/submitFortune', {
+          //When submit is called, it will sent this usename and message to the backend. 
+          //!Later find a way to input a new fortune and submit it here
+          newfortune: this.newFortune
+        }).subscribe();
+        this.newFortune = "Our Fortune was Submitted"
+    }
+    else{
+      alert(JSON.stringify("You can't get another fortune dummy"));
+    }
+
+  }
+
+  changeFortune(e : any) {
+    this.newFortune = e.target.value;
+  }
+
 }
