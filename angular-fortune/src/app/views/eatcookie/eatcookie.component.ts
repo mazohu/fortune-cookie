@@ -40,7 +40,7 @@ export class EatcookieComponent {
   }
 
   getData(): void {
-    //alert(JSON.stringify("This is working"));
+    alert(JSON.stringify("This is working"));
     this.http.get('http://localhost:8000/api/user/frontend/submitted').subscribe(
       (data : any) => {
         if (data == 1){
@@ -68,7 +68,8 @@ export class EatcookieComponent {
           //!Later find a way to input a new fortune and submit it here
           newfortune: this.newFortune
         }).subscribe();
-        this.newFortune = "Our Fortune was Submitted"
+        this.newFortune = this.newFortune + ", it was submitted!" 
+        this.getData();
     }
     else{
       alert(JSON.stringify("You can't get another fortune dummy"));
