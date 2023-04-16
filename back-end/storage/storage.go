@@ -124,6 +124,8 @@ func canSubmit()(bool){
 	currentTime := time.Now()
 	//If the year, month, or day is different, we can have a new fortune! If not, we have the same day as last submitted fortune
 	if (CurrentUser.LastTime.Year() != currentTime.Year() || CurrentUser.LastTime.Month() != currentTime.Month() || CurrentUser.LastTime.Day() != currentTime.Day()) {
+		CurrentUser.Submitted = true
+		CurrentUser.LastTime = time.Now()
 		return true
 	}
 	return false
