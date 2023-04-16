@@ -33,14 +33,13 @@ export class EatcookieComponent {
         username: this.user.name,
         email: this.user.email,
         userid: this.user.id
-      }).subscribe();
+      }).subscribe(data => {
+        this.getData();
+      });
     }
-
-    this.getData();
   }
 
   getData(): void {
-    alert(JSON.stringify("This is working"));
     this.http.get('http://localhost:8000/api/user/frontend/submitted').subscribe(
       (data : any) => {
         if (data == 1){
