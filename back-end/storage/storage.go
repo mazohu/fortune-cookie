@@ -7,6 +7,7 @@ import (
 	"math/rand"
 	"hash/fnv"
 	"fmt"
+	"log"
 
 	"gorm.io/gorm"
   	"gorm.io/driver/sqlite"
@@ -51,7 +52,9 @@ func GetUser(user User)() {
 	//FirstOrCreate() returns record matching primary key of the first parameter or creates the record with the attributes of the second parameter
 	//Get or create CurrentUser with the attributes of the user argument
 	CurrentUser = user
-	db.Omit("Fortunes").FirstOrCreate(&CurrentUser, user)
+	//result := db.Omit("Fortunes").Where(User{ID: CurrentUser.ID}).FirstOrCreate(&CurrentUser, user)
+	result := db.Where(User{ID: CurrentUser.ID}).FirstOrCreate(&CurrentUser, user)
+	log.Println("GETUSER: created/updated record’s count", result.RowsAffected);
 }
 
 //Updates the fortune database with a fortune only if the user has not yet submitted a fortune

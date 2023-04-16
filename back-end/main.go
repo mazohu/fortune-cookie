@@ -46,7 +46,13 @@ func main() {
 
 	//This is how we add to the database
 	app.Post("/api/user/populate", func(c *fiber.Ctx) error {
-		user := store.User{Username: "username", Email: "em", ID: "uID", LastTime: time.Date(2002, time.January, 1, 23, 0, 0, 0, time.UTC)}
+		user := store.User{
+			Username: "username", 
+			Email: "em", 
+			ID: "uID",
+			Submitted: false, 
+			LastTime: time.Date(2002, time.January, 1, 23, 0, 0, 0, time.UTC),
+		}
 
 		if err := c.BodyParser(&user); err != nil {
 			return err
