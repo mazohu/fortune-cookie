@@ -31,6 +31,10 @@
     </div>
     <div *ngIf="user">
       <div>
+        <p>Submitted is {{ submitted }}</p>
+        <p>Lasttime is {{ lasttime }}</p>
+      </div>
+      <div>
         <form (submit)="submit()">
             <input type="text" class="form-control" placeholder="Submit a Fortune"
               (change)="changeFortune($event)"

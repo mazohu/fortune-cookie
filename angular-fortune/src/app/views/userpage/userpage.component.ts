@@ -46,32 +46,12 @@ export class UserpageComponent{
       }).subscribe();
     }
 
+    this.getData();
+
   }
 
   getData(): void {
     //alert(JSON.stringify("This is working"));
-    //will get the variables from backend. res is the response
-
-    //the get request below is for receiving the last fortune.
-    // //!Eventually, replace this with all the fortunes. Later we can have a get request for updating this from the backend and it'll be easier
-    // this.http.get('http://localhost:8000/api/user/frontend/fid').subscribe(
-    //   (data : any) => {
-    //     //if the array is empty, add the first item
-    //     if (!this.fid.length){
-    //       this.fid.push(data);
-    //     }
-    //     //if its not empty, it checks if the last item is the same
-    //     else if (data != this.fid[this.fid.length - 1]){
-    //       this.fid.push(data);
-    //     }
-    //   }
-    // );
-    // this.http.get('http://localhost:8000/api/user/frontend/fid').subscribe(
-    //   (data : any) => {
-    //     this.fid.push(data);
-    //   }
-    // );
-
     this.http.get('http://localhost:8000/api/user/frontend/submitted').subscribe(
       (data : any) => {
         if (data == 1){
@@ -88,8 +68,8 @@ export class UserpageComponent{
         this.lasttime = data;
       }
     );
-
   }
+
   submit(): void {
     if (!this.submitted){
       //when submitted is false, you're able to submit a fortune

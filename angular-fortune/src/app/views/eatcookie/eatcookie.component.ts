@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { SocialAuthService } from "@abacritt/angularx-social-login";
 
-import Pusher from 'pusher-js';
 import {HttpClient} from "@angular/common/http";
 @Component({
   selector: 'app-eatcookie',
@@ -27,24 +26,7 @@ export class EatcookieComponent {
       console.log(this.user)
     });
 
-    // const pusher = new Pusher('a621a1a5218dda4b051a', {
-    //   cluster: 'us2'
-    // });
-
-    // //the channel is chat
-    // const channel = pusher.subscribe('chat');
-
-    // //the event is 'message'
-    // channel.bind('message', (data : any) => {
-    //   this.messages.push(data)
-    //   //alert(JSON.stringify(data));
-    // });
-
-    // for(let i=0 ; i < this.messages.length ; i++){  //How to properly iterate here!!
-    //   console.log(this.messages[i])
-    // }
-
-    // //updating values only if the user is logged in.
+    //updating values only if the user is logged in.
     if (this.loggedIn){
       this.http.post('http://localhost:8000/api/user/populate', {
         //When submit is called, it will sent this usename and message to the backend. 
@@ -53,6 +35,28 @@ export class EatcookieComponent {
         userid: this.user.id
       }).subscribe();
     }
+
+    this.getData();
+  }
+
+  getData(): void {
+    alert(JSON.stringify("This is working"));
+    this.http.get('http://localhost:8000/api/user/frontend/submitted').subscribe(
+      (data : any) => {
+        if (data == 1){
+          this.submitted = true;
+        }
+        else{
+          this.submitted = false;
+        }
+      }
+    );
+
+    this.http.get('http://localhost:8000/api/user/frontend/lastTime').subscribe(
+      (data : any) => {
+        this.lasttime = data;
+      }
+    );
   }
 
   submit(): void {
@@ -64,7 +68,8 @@ export class EatcookieComponent {
           //!Later find a way to input a new fortune and submit it here
           newfortune: this.newFortune
         }).subscribe();
-        this.newFortune = "Our Fortune was Submitted"
+        this.newFortune = this.newFortune + ", it was submitted!" 
+        this.getData();
     }
     else{
       alert(JSON.stringify("You can't get another fortune dummy"));
