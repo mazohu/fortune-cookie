@@ -31,7 +31,8 @@
     </div>
     <div *ngIf="user">
       <div>
-        <p>Submitted is {{submitted}}</p>
+        <p>Submitted is {{ submitted }}</p>
+        <p>Lasttime is {{ lasttime }}</p>
       </div>
       <div>
         <form (submit)="submit()">

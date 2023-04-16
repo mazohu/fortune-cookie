@@ -46,6 +46,8 @@ export class UserpageComponent{
       }).subscribe();
     }
 
+    this.getData();
+
   }
 
   getData(): void {
@@ -61,11 +63,11 @@ export class UserpageComponent{
       }
     );
 
-    // this.http.get('http://localhost:8000/api/user/frontend/lastTime').subscribe(
-    //   (data : any) => {
-    //     this.lasttime = data;
-    //   }
-    // );
+    this.http.get('http://localhost:8000/api/user/frontend/lastTime').subscribe(
+      (data : any) => {
+        this.lasttime = data;
+      }
+    );
   }
 
   submit(): void {

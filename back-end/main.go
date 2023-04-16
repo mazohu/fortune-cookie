@@ -67,10 +67,12 @@ func main() {
 		//adding to the database, and/or receiving
 		store.GetUser(user)
 
+		store.CurrentUser.Submitted = store.GetSubmit()
+		store.CurrentUser.LastTime = store.GetLastTime()
+
 		return c.JSON(fiber.Map{
 			"message": "Success!",
 		})
-
 	})
 
 	//This is how to submit a fortune to the fortune database
@@ -95,6 +97,9 @@ func main() {
 			log.Println(err.Error())
 		}
 
+		log.Println("POST FORTUNE: This is my user:", store.CurrentUser.Username)
+		log.Println("POST FORTUNE:This is the submitted:", store.CurrentUser.Submitted)
+
 		return c.JSON(fiber.Map{
 			"message": "success!",
 		})
@@ -109,8 +114,9 @@ func main() {
 	//This is how we show what's in the database to the frontend
 	app.Get("/api/user/frontend/submitted", func(c *fiber.Ctx) error {
 
-		log.Println("This is my user:", store.CurrentUser.Username)
-		log.Println("This is the submitted:", store.CurrentUser.Submitted)
+		// log.Println("GET SUBMIT: This is my user:", store.CurrentUser.Username)
+		// log.Println("GET SUBMIT: This is the submitted (through function):", store.GetSubmit())
+		// log.Println("GET SUBMIT: This is the submitted (through stored):", store.CurrentUser.Submitted)
 
 		//sending the information over by json-ing the pointer info
 		return c.JSON(store.CurrentUser.Submitted)
@@ -119,6 +125,10 @@ func main() {
 
 	//This is how we show what's in the database to the frontend
 	app.Get("/api/user/frontend/lastTime", func(c *fiber.Ctx) error {
+
+		// log.Println("GET LASTTIME: This is my user:", store.CurrentUser.Username)
+		// log.Println("GET LASTTIME: This is the lasttime (through function):", store.GetLastTime())
+		// log.Println("GET LASTTIME: This is the lasttime (through stored):", store.CurrentUser.LastTime)
 
 		//sending the information over by json-ing the pointer info
 		return c.JSON(store.CurrentUser.LastTime)

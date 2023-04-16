@@ -7,7 +7,7 @@ import (
 	"math/rand"
 	"hash/fnv"
 	"fmt"
-	"log"
+	//"log"
 
 	"gorm.io/gorm"
   	"gorm.io/driver/sqlite"
@@ -52,9 +52,18 @@ func GetUser(user User)() {
 	//FirstOrCreate() returns record matching primary key of the first parameter or creates the record with the attributes of the second parameter
 	//Get or create CurrentUser with the attributes of the user argument
 	CurrentUser = user
-	//result := db.Omit("Fortunes").Where(User{ID: CurrentUser.ID}).FirstOrCreate(&CurrentUser, user)
-	result := db.Where(User{ID: CurrentUser.ID}).FirstOrCreate(&CurrentUser, user)
-	log.Println("GETUSER: created/updated record’s count", result.RowsAffected);
+	db.Omit("Fortunes").Where(User{ID: CurrentUser.ID}).FirstOrCreate(&CurrentUser, user)
+	//result := db.Where(User{ID: CurrentUser.ID}).FirstOrCreate(&CurrentUser, user)
+}
+
+func GetSubmit() bool{
+	db.Where("id = ?", CurrentUser.ID).First(&CurrentUser)
+	return CurrentUser.Submitted
+}
+
+func GetLastTime() time.Time{
+	db.Where("id = ?", CurrentUser.ID).First(&CurrentUser)
+	return CurrentUser.LastTime
 }
 
 //Updates the fortune database with a fortune only if the user has not yet submitted a fortune
@@ -65,6 +74,7 @@ func SubmitFortune(content string)(error) {
 		//TODO: Decide whether "submitted" field is necessary in database (depends on how we design receiving)
 		db.Model(&CurrentUser).Update("Submitted", true)
 		db.Model(&CurrentUser).Update("LastTime", time.Now())
+		db.Where("id = ?", CurrentUser.ID).First(&CurrentUser)
 		return nil
 	}
 	return fmt.Errorf("Failed to submit fortune %q to database", content)
