@@ -70,6 +70,9 @@ func main() {
 		store.CurrentUser.Submitted = store.GetSubmit()
 		store.CurrentUser.LastTime = store.GetLastTime()
 
+		log.Println("POST POPULATE: This is the submitted (through stored):", store.CurrentUser.Submitted)
+		log.Println("POST POPULATE: This is the lasttime (through stored):", store.CurrentUser.LastTime)
+		
 		return c.JSON(fiber.Map{
 			"message": "Success!",
 		})
