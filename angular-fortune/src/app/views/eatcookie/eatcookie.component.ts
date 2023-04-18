@@ -14,6 +14,7 @@ export class EatcookieComponent {
   //username, email, and id is all contained in user above
   submitted : boolean = false;
   lasttime : any = '';
+  lastdate : string = '';
   newFortune : string = '';
   getFortune : string = '';
 
@@ -57,9 +58,17 @@ export class EatcookieComponent {
       }
     );
 
-    if (this.submitted == false){
-      this.getFortune = '';
-    }
+    this.http.get('http://localhost:8000/api/user/frontend/todayfortune').subscribe(
+      (data : any) => {
+        this.getFortune = data;
+      }
+    );
+
+    this.http.get('http://localhost:8000/api/user/frontend/lastdate').subscribe(
+      (data : any) => {
+        this.lastdate = data;
+      }
+    );
   }
 
   receive():void{
