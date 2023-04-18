@@ -197,13 +197,13 @@ func createDefaultFortunes() {
 			if (cond == 0){
 				cond = cond + 1
 			} else if (cond == 1){
-				tempTime = time.Now().Add(24 * time.Hour)
+				tempTime = time.Now().Add(-24 * time.Hour)
 				cond = cond + 1
 			} else if (cond == 2){
-				tempTime = time.Now().Add(48 * time.Hour)
+				tempTime = time.Now().Add(-48 * time.Hour)
 				cond = cond + 1
 			} else if (cond == 3){
-				tempTime = time.Now().Add(72 * time.Hour)
+				tempTime = time.Now().Add(-72 * time.Hour)
 				cond = 0;
 			}
 
