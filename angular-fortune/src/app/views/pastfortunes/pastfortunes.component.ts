@@ -15,6 +15,8 @@ export class PastfortunesComponent {
 
   //username, email, and id is all contained in user above
   fid : string[] = [];
+  content : string = "";
+  date : string = "";
 
   constructor(private authService: SocialAuthService, private http: HttpClient){}
 
@@ -44,6 +46,7 @@ export class PastfortunesComponent {
     //alert(JSON.stringify("This is working"));
     this.http.get('http://localhost:8000/api/user/frontend/fid').subscribe(
         (data : any) => {
+          
           this.fid = data;
         }
     );

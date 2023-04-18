@@ -12,6 +12,7 @@ import (
 	"log"
 	"os"
 	"time"
+	//"reflect"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
@@ -96,6 +97,7 @@ func main() {
 		}
 
 		//log.Println("This is the new fortune:", fortune.Content)
+		//storing in the fortune database
 		if store.SubmitFortune(fortune.Content) != nil {
 			log.Println(err.Error())
 		}
@@ -115,8 +117,13 @@ func main() {
 			return c.JSON("Error when receiving a fortune");
 		}else{
 			//log.Println("GET FORTUNE: This is my new fortune:", fortune.Content)
+			//log.Println("GET FORTUNE: Today's fortune is:", store.FormatDate(fortune.TimeSubmitted));
 			return c.JSON(fortune.Content);
 		}
+	})
+
+	app.Get("/api/user/frontend/getTodayDate", func(c *fiber.Ctx) error {
+		return c.JSON(store.FormatDate(time.Now()));
 	})
 
 	//This is how we show what's in the database to the frontend
@@ -129,14 +136,17 @@ func main() {
 			return c.JSON("Error when receiving a fortune");
 		}else{
 			//log.Println("GET FORTUNE: This is my new fortune:", fortune.Content)
-			fortuneContents := []string{};
+			// fortuneContents := []string{};
+			// //log.Println("GET FORTUNE: Type of fortuneList is ", reflect.TypeOf(fortuneList));
 
-			for i, fortune := range fortuneList {
-				log.Println(i, "--", fortune.Content) 
-				fortuneContents = append(fortuneContents, fortune.Content);
-			 }
-			
-			return c.JSON(fortuneContents);
+			// for i, fortune := range fortuneList {
+			// 	log.Println(i, "--", fortune.Content) 
+			// 	fortuneContents = append(fortuneContents, fortune.Content);
+			//  }
+
+			contentList, timeList := store.ReorganizeFortunes(fortuneList);
+			log.Println("GET FORTUNE: timelist is", timeList) 
+			return c.JSON(contentList);
 		}
 	})
 

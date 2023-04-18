@@ -7,7 +7,7 @@ import (
 	"math/rand"
 	"hash/fnv"
 	"fmt"
-	//"log"
+	"log"
 
 	"gorm.io/gorm"
   	"gorm.io/driver/sqlite"
@@ -31,6 +31,7 @@ type User struct {
 type Fortune struct {
     ID uint32  `gorm:"primaryKey"`
 	Content string
+	TimeSubmitted time.Time
 }
 
 //Initialize the GORM model abstracting the database
@@ -68,10 +69,9 @@ func GetLastTime() time.Time{
 
 //Updates the fortune database with a fortune only if the user has not yet submitted a fortune
 func SubmitFortune(content string)(error) {
-	fortune := Fortune{ID:hashFortune(content), Content:content}
+	fortune := Fortune{ID:hashFortune(content), Content:content, TimeSubmitted: time.Now()}
 	if canSubmit() {
 		db.FirstOrCreate(&fortune, fortune)
-		//TODO: Decide whether "submitted" field is necessary in database (depends on how we design receiving)
 		db.Model(&CurrentUser).Update("Submitted", true)
 		db.Model(&CurrentUser).Update("LastTime", time.Now())
 		db.Where("id = ?", CurrentUser.ID).First(&CurrentUser)
@@ -112,13 +112,102 @@ func GetFortunesNotReceived()([]Fortune, error) {
 	return originalFortunes, nil
 }
 
+//reformats the date so it can be passed to front end a little prettier
+func FormatDate(ourTime time.Time)(string){
+	year, month, day := ourTime.Date();
+	stringDate := fmt.Sprintf("%s %d, %d", month.String(), day, year);
+	return stringDate;
+}
+
+func ReorganizeFortunes(fortuneList []Fortune)([]string, []string){
+	contentList := []string{};
+	timeList := []time.Time{};
+	timeStringList := []string{};
+	//log.Println("GET FORTUNE: Type of fortuneList is ", reflect.TypeOf(fortuneList));
+
+	for i, fortune := range fortuneList {
+		log.Println(i, "--", fortune.Content) 
+		currentTime := fortune.TimeSubmitted;
+
+		if (len(timeList) == 0){
+			contentList = append(contentList, fortune.Content);
+			timeList = append(timeList, fortune.TimeSubmitted);
+		}else{
+			var index = 0;
+			for (currentTime.Before(timeList[index])){
+				index = index + 1;
+				if (index == len(timeList)){break}
+			}
+			if (index == len(timeList)){
+				contentList = append(contentList, fortune.Content);
+				timeList = append(timeList, fortune.TimeSubmitted);
+			} else if (currentTime.Equal(timeList[index])){
+				//should never reach here, cause you only get one fortune a day
+				contentList = append(contentList, fortune.Content);
+				timeList = append(timeList, fortune.TimeSubmitted);
+			}else{
+				contentList = append(contentList, "");
+				copy(contentList[index+1:], contentList[index:]);
+				contentList[index] = fortune.Content;
+
+				timeList = append(timeList, time.Now());
+				copy(timeList[index+1:], timeList[index:]);
+				timeList[index] = fortune.TimeSubmitted;
+			}
+		}
+	}
+
+	for _, time := range timeList{
+		timeStringList = append(timeStringList, FormatDate(time));
+	}
+
+	return contentList, timeStringList
+
+}
+
 //Populate the database with the default fortunes
 func createDefaultFortunes() {
 	var fortunes []Fortune
 	if db.Find(&fortunes).RowsAffected == 0 {
-		defaultFortunes := [...]string{"Your future is bright.", "A wise person speaks little and listens much.", "You will receive an unexpected gift soon.", "Good things come to those who wait.", "The greatest risk is not taking one.", "You will soon have an opportunity to travel.", "A journey of a thousand miles begins with a single step.", "You will be rewarded for your hard work.", "You will make many new friends in the coming months.", "Good things come in small packages.", "You will find happiness in unexpected places.", "The best things in life are free.", "You will soon receive a promotion or job offer.", "Your luck is about to change for the better.", "You will be successful in all your endeavors.", "You will soon meet someone special.", "The sun always shines after a storm.", "You will achieve great things in life.", "You are destined for greatness.", "Your dreams will come true if you work hard and believe in yourself."}
+		defaultFortunes := [...]string{"Your future is bright.", 
+		"A wise person speaks little and listens much.", 
+		"You will receive an unexpected gift soon.", 
+		"Good things come to those who wait.", 
+		"The greatest risk is not taking one.", 
+		"You will soon have an opportunity to travel.", 
+		"A journey of a thousand miles begins with a single step.", 
+		"You will be rewarded for your hard work.", 
+		"You will make many new friends in the coming months.", 
+		"Good things come in small packages.", 
+		"You will find happiness in unexpected places.", 
+		"The best things in life are free.", 
+		"You will soon receive a promotion or job offer.", 
+		"Your luck is about to change for the better.", 
+		"You will be successful in all your endeavors.", 
+		"You will soon meet someone special.", 
+		"The sun always shines after a storm.", 
+		"You will achieve great things in life.", 
+		"You are destined for greatness.", 
+		"Your dreams will come true if you work hard and believe in yourself."}
+		var cond = 0;
 		for _, v := range defaultFortunes {
-			fortune := Fortune{ID:hashFortune(v), Content:v}
+
+			var tempTime = time.Now();
+
+			if (cond == 0){
+				cond = cond + 1
+			} else if (cond == 1){
+				tempTime = time.Now().Add(24 * time.Hour)
+				cond = cond + 1
+			} else if (cond == 2){
+				tempTime = time.Now().Add(48 * time.Hour)
+				cond = cond + 1
+			} else if (cond == 3){
+				tempTime = time.Now().Add(72 * time.Hour)
+				cond = 0;
+			}
+
+			fortune := Fortune{ID:hashFortune(v), Content:v, TimeSubmitted: tempTime}
 			db.FirstOrCreate(&fortune, fortune)
 		}
 	}
@@ -144,7 +233,7 @@ func canSubmit()(bool){
 	return false
 }
 
-//Below are test functions
+//*****Below are test functions
 
 //Resets current user's submitted flag for testing purposes
 func resetUserSubmitted()() {
