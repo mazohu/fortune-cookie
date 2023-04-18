@@ -14,11 +14,7 @@ export class PastfortunesComponent {
   loggedIn:any;
 
   //username, email, and id is all contained in user above
-  fid : string[] = ["hello", "hi", "aaa"];
-  submitted : boolean = false;
-  lasttime : any = '';
-  newFortune : string = '';
-  getFortune : string = '';
+  fid : string[] = [];
 
   constructor(private authService: SocialAuthService, private http: HttpClient){}
 
@@ -38,32 +34,8 @@ export class PastfortunesComponent {
         email: this.user.email,
         userid: this.user.id
       }).subscribe(data => {
-        this.getData();
         this.receive();
       });
-    }
-  }
-
-  getData(): void {
-    this.http.get('http://localhost:8000/api/user/frontend/submitted').subscribe(
-      (data : any) => {
-        if (data == 1){
-          this.submitted = true;
-        }
-        else{
-          this.submitted = false;
-        }
-      }
-    );
-
-    this.http.get('http://localhost:8000/api/user/frontend/lastTime').subscribe(
-      (data : any) => {
-        this.lasttime = data;
-      }
-    );
-
-    if (this.submitted == false){
-      this.getFortune = '';
     }
   }
 
@@ -75,28 +47,5 @@ export class PastfortunesComponent {
           this.fid = data;
         }
     );
-  }
-
-  submit(): void {
-    if (!this.submitted){
-      //when submitted is false, you're able to submit a fortune
-      //updating values only if the user is logged in.
-        this.http.post('http://localhost:8000/api/user/submitFortune', {
-          //When submit is called, it will sent this usename and message to the backend. 
-          //!Later find a way to input a new fortune and submit it here
-          newfortune: this.newFortune
-        }).subscribe(data => {
-          this.getData();
-          this.newFortune = this.newFortune + ", it was submitted!" 
-        });
-    }
-    else{
-      alert(JSON.stringify("You can't get another fortune dummy"));
-    }
-
-  }
-
-  changeFortune(e : any) {
-    this.newFortune = e.target.value;
   }
 }

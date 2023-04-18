@@ -18,7 +18,6 @@ export class UserpageComponent{
   loggedIn:any;
 
   //username, email, and id is all contained in user above
-  fid : string[] = [];
   submitted : boolean = false;
   lasttime : any = '';
   newFortune : string = '';
