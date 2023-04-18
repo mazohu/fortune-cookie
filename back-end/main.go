@@ -122,7 +122,22 @@ func main() {
 	//This is how we show what's in the database to the frontend
 	app.Get("/api/user/frontend/fid", func(c *fiber.Ctx) error {
 		//Sending the information over by json-ing the pointer info
-		return c.JSON(store.GetReceivedFortunes)
+		var fortuneList, err = store.GetReceivedFortunes();
+
+		if err != nil{
+			//log.Println("GET FORTUNE: Error when receiving a fortune")
+			return c.JSON("Error when receiving a fortune");
+		}else{
+			//log.Println("GET FORTUNE: This is my new fortune:", fortune.Content)
+			fortuneContents := []string{};
+
+			for i, fortune := range fortuneList {
+				log.Println(i, "--", fortune.Content) 
+				fortuneContents = append(fortuneContents, fortune.Content);
+			 }
+			
+			return c.JSON(fortuneContents);
+		}
 	})
 
 	//This is how we show what's in the database to the frontend
