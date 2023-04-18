@@ -14,7 +14,7 @@ export class PastfortunesComponent {
   loggedIn:any;
 
   //username, email, and id is all contained in user above
-  fid : string[] = [];
+  fid : string[] = ["hello", "hi", "aaa"];
   submitted : boolean = false;
   lasttime : any = '';
 
