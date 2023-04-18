@@ -16,6 +16,7 @@ export class EatcookieComponent {
   submitted : boolean = false;
   lasttime : any = '';
   newFortune : string = '';
+  getFortune : string = '';
 
   constructor(private authService: SocialAuthService, private http: HttpClient){}
 
@@ -56,6 +57,25 @@ export class EatcookieComponent {
         this.lasttime = data;
       }
     );
+
+    if (this.submitted == false){
+      this.getFortune = '';
+    }
+  }
+
+  receive():void{
+    //receiving a fortune.
+    //alert(JSON.stringify("This is working"));
+    if (this.getFortune == ''){
+      this.http.get('http://localhost:8000/api/user/frontend/getFortune').subscribe(
+        (data : any) => {
+          this.getFortune = data;
+        }
+      );
+    }
+    else{
+      alert(JSON.stringify("Only one fortune a day dummy"));
+    }
   }
 
   submit(): void {
@@ -66,9 +86,10 @@ export class EatcookieComponent {
           //When submit is called, it will sent this usename and message to the backend. 
           //!Later find a way to input a new fortune and submit it here
           newfortune: this.newFortune
-        }).subscribe();
-        this.newFortune = this.newFortune + ", it was submitted!" 
-        this.getData();
+        }).subscribe(data => {
+          this.getData();
+          this.newFortune = this.newFortune + ", it was submitted!" 
+        });
     }
     else{
       alert(JSON.stringify("You can't get another fortune dummy"));

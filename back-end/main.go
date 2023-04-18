@@ -70,8 +70,8 @@ func main() {
 		store.CurrentUser.Submitted = store.GetSubmit()
 		store.CurrentUser.LastTime = store.GetLastTime()
 
-		log.Println("POST POPULATE: This is the submitted (through stored):", store.CurrentUser.Submitted)
-		log.Println("POST POPULATE: This is the lasttime (through stored):", store.CurrentUser.LastTime)
+		//log.Println("POST POPULATE: This is the submitted (through stored):", store.CurrentUser.Submitted)
+		//log.Println("POST POPULATE: This is the lasttime (through stored):", store.CurrentUser.LastTime)
 		
 		return c.JSON(fiber.Map{
 			"message": "Success!",
@@ -95,17 +95,28 @@ func main() {
 			fmt.Println(err.Error())
 		}
 
-		log.Println("This is the new fortune:", fortune.Content)
+		//log.Println("This is the new fortune:", fortune.Content)
 		if store.SubmitFortune(fortune.Content) != nil {
 			log.Println(err.Error())
 		}
 
-		log.Println("POST FORTUNE: This is my user:", store.CurrentUser.Username)
-		log.Println("POST FORTUNE:This is the submitted:", store.CurrentUser.Submitted)
+		//log.Println("POST FORTUNE: This is my user:", store.CurrentUser.Username)
+		//log.Println("POST FORTUNE:This is the submitted:", store.CurrentUser.Submitted)
 
 		return c.JSON(fiber.Map{
 			"message": "success!",
 		})
+	})
+
+	app.Get("/api/user/frontend/getFortune", func(c *fiber.Ctx) error {
+		var fortune, err = store.ReceiveFortune();
+		if err != nil{
+			//log.Println("GET FORTUNE: Error when receiving a fortune")
+			return c.JSON("Error when receiving a fortune");
+		}else{
+			//log.Println("GET FORTUNE: This is my new fortune:", fortune.Content)
+			return c.JSON(fortune.Content);
+		}
 	})
 
 	//This is how we show what's in the database to the frontend
