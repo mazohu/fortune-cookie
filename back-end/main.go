@@ -52,6 +52,7 @@ func main() {
 			ID: "uID",
 			Submitted: false, 
 			LastTime: time.Date(2002, time.January, 1, 23, 0, 0, 0, time.UTC),
+			LastFortune: "",
 		}
 
 		if err := c.BodyParser(&user); err != nil {
@@ -69,6 +70,7 @@ func main() {
 
 		store.CurrentUser.Submitted = store.GetSubmit()
 		store.CurrentUser.LastTime = store.GetLastTime()
+		store.CurrentUser.LastFortune = store.GetLastFortune()
 
 		//log.Println("POST POPULATE: This is the submitted (through stored):", store.CurrentUser.Submitted)
 		//log.Println("POST POPULATE: This is the lasttime (through stored):", store.CurrentUser.LastTime)
@@ -140,6 +142,11 @@ func main() {
 		}
 	})
 
+	app.Get("/api/user/frontend/lastdate", func(c *fiber.Ctx) error {
+		lastDate := store.FormatDate(store.CurrentUser.LastTime)
+		return c.JSON(lastDate);
+	})
+
 	//This is how we show what's in the database to the frontend
 	app.Get("/api/user/frontend/submitted", func(c *fiber.Ctx) error {
 
@@ -149,6 +156,14 @@ func main() {
 
 		//sending the information over by json-ing the pointer info
 		return c.JSON(store.CurrentUser.Submitted)
+
+	})
+
+	//This is how we show what's in the database to the frontend
+	app.Get("/api/user/frontend/todayfortune", func(c *fiber.Ctx) error {
+
+		//sending the information over by json-ing the pointer info
+		return c.JSON(store.CurrentUser.LastFortune)
 
 	})
 
