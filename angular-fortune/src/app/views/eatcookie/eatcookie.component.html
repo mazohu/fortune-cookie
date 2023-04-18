@@ -41,6 +41,14 @@
             />
             <p>You entered {{newFortune}}</p>
           </form>
+          <div *ngIf="submitted">
+            <p> You can now recieve a fortune! </p>
+            <button type="button" (click)="receive()">
+              Click here to receieve a fortune!
+          </button>
+          <p>Your new fortune: {{getFortune}}</p>
+          
+          </div>
       </div>
     </div>
 </div>
