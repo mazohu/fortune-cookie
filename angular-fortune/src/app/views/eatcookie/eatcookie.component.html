@@ -30,13 +30,78 @@
         <p>{{ loggedIn }}</p>
     </div>
     <div *ngIf="user">
+      <nav class="navbar navbar-expand-lg navbar-dark bg-danger">
+        <span class="navbar-brand mb-0 h1">Fortune Cookie</span>
+        <button class="navbar-toggler" type="button"s data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <!-- Weird quirk about this component: when i try to aligning the navbar stuff to the
+          left through the userpage.component.css (using "margin-left: auto" in the my-pofile class),
+          it doesn't work, but when I add "style=margin-left: auto;" inline to the HTML, it works? -->
+          <ul class="navbar-nav my-profile!important" style="margin-left: auto;">
+            <!-- Commenting these out because they don't have a reason to be on the user home (I think) -->
+            <!-- <li class="nav-item active">
+              <a [routerLink]="['']" class="nav-link" href="#">Home </a>
+            </li>
+            <li class="nav-item">
+              <a [routerLink]="['/login']" class="nav-link" href="#">Login </a>
+            </li> -->
+            <li class="nav-item">
+              <a class="nav-link disabled" href="#">Eat Cookie<span class="sr-only"> (current)</span></a>
+            </li>
+            <li class="nav-item">
+              <a [routerLink]="['/userpage']" class="nav-link" href="#">User Home<span class="sr-only"></span></a>
+            </li>
+            <li class="nav-item">
+              <a [routerLink]="['/userprofile']" class="nav-link" href="#">My Profile<span class="sr-only"></span></a>
+            </li>
+          </ul>
+        </div>
+      </nav>
+
+      
       <div>
-        <p>Submitted is {{ submitted }}</p>
-        <p>Lasttime is {{ lasttime }}</p>
-        <p>Lastdate is {{ lastdate }}</p>
-      </div>
-      <div>
-        <form (submit)="submit()">
+
+        
+        <div class="container-fluid">
+          <div style="text-align:center">
+            <button class="button button4">Eat a Cookie</button>
+          </div>
+          <div style="text-align:center">
+            <div class="d-inline-flex p-2 bd-highlight text-danger bg-light">Submit a fortune to receive a fortune below!</div>
+            <br>
+            <br>
+          </div>
+        </div>
+
+        <div class="container">
+          <div class="d-flex flex-row flex-shrink-0 justify-content-left bg-white border border-3 border-danger bg-opacity-80 rounded">
+            <div class="col-lg-6 align-items-left justify-content-left flex-shrink-0 p-3 link-dark text-decoration-none border-bottom">
+              <h2 style="text-align: left;">Submit a Fortune</h2>
+              <br>
+              <form (submit)="submit()">
+                <input type="text" class="form-control" placeholder="Submit a Fortune"
+                  (change)="changeFortune($event)"
+                />
+                <p>You entered: {{newFortune}}</p>
+              </form>
+              <br>
+              <div *ngIf="submitted">
+                <h2> You can now recieve a fortune! </h2>
+                <br>
+                <button type="button" class="btn btn-primary" (click)="receive()">
+                  Click here to receieve a fortune!
+              </button>
+              <br>
+              <br>
+              <br>
+              <h2>Your new fortune: <h3>{{getFortune}}</h3></h2>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- <form (submit)="submit()">
             <input type="text" class="form-control" placeholder="Submit a Fortune"
               (change)="changeFortune($event)"
             />
@@ -50,6 +115,11 @@
           <p>Your new fortune: {{getFortune}}</p>
           
           </div>
+      </div> -->
+      <div>
+        <p>Submitted is {{ submitted }}</p>
+        <p>Lasttime is {{ lasttime }}</p>
+        <p>Lastdate is {{ lastdate }}</p>
       </div>
     </div>
 </div>
