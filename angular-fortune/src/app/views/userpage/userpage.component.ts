@@ -19,6 +19,7 @@ export class UserpageComponent{
   //username, email, and id is all contained in user above
   submitted : boolean = false;
   lasttime : any = '';
+  lastdate : string = '';
   newFortune : string = '';
 
   constructor(private authService: SocialAuthService, private http: HttpClient){}
@@ -59,6 +60,12 @@ export class UserpageComponent{
     this.http.get('http://localhost:8000/api/user/frontend/lastTime').subscribe(
       (data : any) => {
         this.lasttime = data;
+      }
+    );
+
+    this.http.get('http://localhost:8000/api/user/frontend/lastdate').subscribe(
+      (data : any) => {
+        this.lastdate = data;
       }
     );
   }

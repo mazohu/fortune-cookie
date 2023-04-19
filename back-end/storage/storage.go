@@ -25,7 +25,8 @@ type User struct {
 	ID string       `json:"userid" gorm:"primaryKey"`
 	ReceivedFortunes []Fortune `json:"history" gorm:"many2many:user_fortunes"`  //Stores the FIDs of the user's received fortunes
 	Submitted bool      `json:"submitted" gorm:"default:false"`  //Flag for whether user has submitted daily fortune
-	LastTime time.Time  `json:"lasttime"`  //Stores time of last submit
+	LastTime time.Time  `json:"lasttime"`  			//Stores time of last submit
+	LastFortune string	`json:"lastfortune"`		//Stores last fortune string	
 }
 
 type Fortune struct {
@@ -66,12 +67,16 @@ func GetLastTime() time.Time{
 	return CurrentUser.LastTime
 }
 
+func GetLastFortune() string{
+	db.Where("id = ?", CurrentUser.ID).First(&CurrentUser)
+	return CurrentUser.LastFortune
+}
+
 //Updates the fortune database with a fortune only if the user has not yet submitted a fortune
 func SubmitFortune(content string)(error) {
 	fortune := Fortune{ID:hashFortune(content), Content:content}
 	if canSubmit() {
 		db.FirstOrCreate(&fortune, fortune)
-		//TODO: Decide whether "submitted" field is necessary in database (depends on how we design receiving)
 		db.Model(&CurrentUser).Update("Submitted", true)
 		db.Model(&CurrentUser).Update("LastTime", time.Now())
 		db.Where("id = ?", CurrentUser.ID).First(&CurrentUser)
@@ -88,6 +93,7 @@ func ReceiveFortune()(Fortune, error) {
 	}
 	//Get a random fortune from originalFortunes
 	fortune := originalFortunes[rand.Intn(len(originalFortunes)-1)]
+	db.Model(&CurrentUser).Update("LastFortune", fortune.Content)
 	//Update the user_fortunes table
 	if err = db.Model(&CurrentUser).Association("ReceivedFortunes").Append(&fortune); err != nil {
 		return Fortune{}, err
@@ -110,6 +116,13 @@ func GetFortunesNotReceived()([]Fortune, error) {
 		return originalFortunes, err
 	}
 	return originalFortunes, nil
+}
+
+//reformats the date so it can be passed to front end a little prettier
+func FormatDate(ourTime time.Time)(string){
+	year, month, day := ourTime.Date();
+	stringDate := fmt.Sprintf("%s %d, %d", month.String(), day, year);
+	return stringDate;
 }
 
 //Populate the database with the default fortunes
@@ -151,8 +164,8 @@ func resetUserSubmitted()() {
 	db.Model(&CurrentUser).Update("Submitted", false)
 }
 
-func getUserExample(UID string, email string, name string, submitted bool, date time.Time) {
-	testUser := User{ID:UID, Email: email, Username: name, LastTime: date}
+func getUserExample(UID string, email string, name string, submitted bool, date time.Time, fortune string) {
+	testUser := User{ID:UID, Email: email, Username: name, LastTime: date, LastFortune: fortune}
 	GetUser(testUser)
 	spew.Dump(CurrentUser)
 }
@@ -182,9 +195,9 @@ func Example(file string) {
 	InitStorage(file)
 	//Adding multiple users to database
 	fmt.Println("Adding 3 users to the database")
-	getUserExample("20872307863031084440", "foo@gmail.com", "Jane Doe", false, time.Now().AddDate(0, 0, -1))
-		getUserExample("4331420171203007292", "foobar@gmail.com", "John Doe", false, time.Now().AddDate(0, -1, 0))
-		getUserExample("30872307863031084441", "bar@gmail.com", "James Doe", true, time.Now())
+	getUserExample("20872307863031084440", "foo@gmail.com", "Jane Doe", false, time.Now().AddDate(0, 0, -1), "")
+		getUserExample("4331420171203007292", "foobar@gmail.com", "John Doe", false, time.Now().AddDate(0, -1, 0), "")
+		getUserExample("30872307863031084441", "bar@gmail.com", "James Doe", true, time.Now(), "")
 	//Submitting multiple fortunes
 	fmt.Println("John Doe submits a fortune")
 	submitExample("4331420171203007292", "foobar@gmail.com", "John Doe")
