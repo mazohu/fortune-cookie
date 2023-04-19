@@ -68,6 +68,9 @@ func main() {
 		//adding to the database, and/or receiving
 		store.GetUser(user)
 
+		//checks to make sure new data can be received. If it can, it updates some info
+		//store.CheckToday();
+
 		store.CurrentUser.Submitted = store.GetSubmit()
 		store.CurrentUser.LastTime = store.GetLastTime()
 		store.CurrentUser.LastFortune = store.GetLastFortune()

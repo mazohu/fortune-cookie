@@ -72,6 +72,15 @@ func GetLastFortune() string{
 	return CurrentUser.LastFortune
 }
 
+func CheckToday(){
+	if (canSubmit()){
+		CurrentUser.Submitted = false
+		CurrentUser.LastFortune = ""
+		db.Model(&CurrentUser).Update("Submitted", false)
+		db.Model(&CurrentUser).Update("LastFortune", "")
+	}
+}
+
 //Updates the fortune database with a fortune only if the user has not yet submitted a fortune
 func SubmitFortune(content string)(error) {
 	fortune := Fortune{ID:hashFortune(content), Content:content}
