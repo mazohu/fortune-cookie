@@ -11,38 +11,39 @@ import { HttpClient } from '@angular/common/http';
 
 export class UserprofileComponent {
 
-  //username, email, and ID are all contained in the user variable.
   user:any;
   loggedIn:any;
 
-  submitted: boolean = false;
-  lasttime: any = '';
-  newFortune: string = '';
+  //username, email, and id is all contained in user above
+  submitted : boolean = false;
+  lasttime : any = '';
+  lastdate : string = '';
+  newFortune : string = '';
 
   constructor(private authService: SocialAuthService, private http: HttpClient){}
 
-  ngOnInit() {
+  ngOnInit(){
     this.authService.authState.subscribe((user) => {
       this.user = user;
       this.loggedIn = (user != null);
-      console.log(this.user);
+      console.log(this.user)
     });
 
-    // updating values only if the user is logged in
+    //updating values only if the user is logged in.
     if (this.loggedIn){
       this.http.post('http://localhost:8000/api/user/populate', {
-      
-      // when submit is called, it will send these to the backend:
-      username: this.user.name,
-      email: this.user.email,
-      userid: this.user.id
-    }).subscribe(data => {
-      this.getData();
-    });
+        //When submit is called, it will sent this usename and message to the backend. 
+        username: this.user.name,
+        email: this.user.email,
+        userid: this.user.id
+      }).subscribe(data => {
+        this.getData();
+      });
     }
   }
 
   getData(): void {
+    //alert(JSON.stringify("This is working"));
     this.http.get('http://localhost:8000/api/user/frontend/submitted').subscribe(
       (data : any) => {
         if (data == 1){
@@ -59,5 +60,11 @@ export class UserprofileComponent {
         this.lasttime = data;
       }
     );
+
+    this.http.get('http://localhost:8000/api/user/frontend/lastdate').subscribe(
+      (data : any) => {
+        this.lastdate = data;
+      }
+    );
+    }
   }
-}

@@ -1,27 +1,41 @@
 <div class="bg">
+
       <div *ngIf="!user">
-          <app-login></app-login>
-            <!-- <nav class="navbar navbar-expand-lg navbar-dark bg-danger">
-                <span class="navbar-brand mb-0 h1">Fortune Cookie</span>
-                <button class="navbar-toggler" type="button"s data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                  <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="collapse navbar-collapse" id="navbarNav">
-                  <ul class="navbar-nav">
-                    <li class="nav-item active">
-                      <a [routerLink]="['']" class="nav-link" href="#">Home </a>
-                    </li>
-                    <li class="nav-item">
-                      <a [routerLink]="['/login']" class="nav-link" href="#">Login <span class="sr-only">(current)</span></a>
-                    </li>
-                  </ul>
-                </div>
-              </nav>
-              <div style="text-align:left">
-                <br>
-                <div class="d-inline-flex p-2 bd-highlight text-danger bg-light"><h4>Sign in with Google first by Navigating to login</h4></div>
-              </div > -->
+        <nav class="navbar navbar-expand-lg navbar-dark bg-danger">
+          <span class="navbar-brand mb-0 h1">Fortune Cookie</span>
+          <button class="navbar-toggler" type="button"s data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+              <li class="nav-item active">
+                <a [routerLink]="['']" class="nav-link" href="#">Home </a>
+              </li>
+              <li class="nav-item">
+                <a [routerLink]="['/login']" class="nav-link" href="#">Login <span class="sr-only">(current)</span></a>
+              </li>
+              <!-- <li class="nav-item">
+                <a class="nav-link disabled" href="#">Disabled</a>
+              </li> -->
+            </ul>
+          </div>
+        </nav>
+        <br>
+        <br> 
+        <br> 
+        <div class="d-flex justify-content-center align-items-center">
+          <div class="card" style="width: 18rem;">
+            <img class="card-img-top" src="https://img.freepik.com/free-vector/hand-drawn-fortune-cookie-illustration_23-2149243120.jpg?t=st=1680124684~exp=1680125284~hmac=3550400e0a64a36e797cbd101a7fbdeeee4aba4e307eaf7af1e803d5c3b3df01/100px180/" alt="Card image cap">
+            <div class="card-body">
+              <h5 class="card-title">Sign in/Make an account</h5>
+              <p class="card-text">Click on the "G" button below to make a new account or sign into an existing one using google.</p>
+              <asl-google-signin-button *ngIf="!user">
+              </asl-google-signin-button>
+              
+            </div>
         </div>
+        </div>
+      </div>
 
     <div *ngIf="user">
         <nav class="navbar navbar-expand-lg navbar-dark bg-danger">
@@ -61,7 +75,7 @@
           </div>>
           <br>
           <div class="container">
-            <div class="d-flex flex-row flex-shrink-0 justify-content-center bg-white">
+            <div class="d-flex flex-row flex-shrink-0 justify-content-center bg-white border border-3 border-danger bg-opacity-80 rounded">
               <!-- <div class=" col-lg-6 align-items-center flex-shrink-0 p-3 link-dark text-decoration-none border-bottom">
                     <h3>My info:</h3>
                     <img src="{{ user.photoUrl }}">

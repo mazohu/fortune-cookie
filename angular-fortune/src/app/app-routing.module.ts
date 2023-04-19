@@ -5,6 +5,7 @@ import { UserpageComponent } from './views/userpage/userpage.component';
 import { HomepageComponent } from './views/homepage/homepage.component';
 import { EatcookieComponent } from './views/eatcookie/eatcookie.component';
 import { PastfortunesComponent } from './views/pastfortunes/pastfortunes.component';
+import { UserprofileComponent } from './views/userprofile/userprofile.component';
 
 const routes: Routes = [
   { path: '', component: HomepageComponent }, //this is homepage
@@ -12,7 +13,7 @@ const routes: Routes = [
   { path: 'userpage', component: UserpageComponent },
   { path: 'eat-cookie', component:EatcookieComponent},
   { path: 'pastFortunes', component:PastfortunesComponent},
-  { path: 'userprofile', component:UserpageComponent}
+  { path: 'userprofile', component:UserprofileComponent}
 ];
 
 @NgModule({
