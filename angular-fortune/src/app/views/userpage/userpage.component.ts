@@ -8,8 +8,7 @@ import {HttpClient} from "@angular/common/http";
 @Component({
   selector: 'app-userpage',
   templateUrl: './userpage.component.html',
-  styles: [
-  ]
+  styleUrls: ['./userpage.component.css']
 })
 
 export class UserpageComponent{

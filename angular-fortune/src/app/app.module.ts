@@ -14,6 +14,7 @@ import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { EatcookieComponent } from './views/eatcookie/eatcookie.component';
 import { PastfortunesComponent } from './views/pastfortunes/pastfortunes.component';
+import { UserprofileComponent } from './views/userprofile/userprofile.component';
 
 @NgModule({
   declarations: [
@@ -21,6 +22,7 @@ import { PastfortunesComponent } from './views/pastfortunes/pastfortunes.compone
     routingComponents,
     EatcookieComponent,
     PastfortunesComponent,
+    UserprofileComponent,
   ],
   imports: [
     BrowserModule,

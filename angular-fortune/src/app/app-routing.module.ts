@@ -11,7 +11,8 @@ const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'userpage', component: UserpageComponent },
   { path: 'eat-cookie', component:EatcookieComponent},
-  { path: 'pastFortunes', component:PastfortunesComponent}
+  { path: 'pastFortunes', component:PastfortunesComponent},
+  { path: 'userprofile', component:UserpageComponent}
 ];
 
 @NgModule({

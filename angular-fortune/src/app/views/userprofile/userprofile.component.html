@@ -1,7 +1,7 @@
 <div class="bg">
-      <div *ngIf="!user">
-          <app-login></app-login>
-            <!-- <nav class="navbar navbar-expand-lg navbar-dark bg-danger">
+    
+        <div *ngIf="!user">
+            <nav class="navbar navbar-expand-lg navbar-dark bg-danger">
                 <span class="navbar-brand mb-0 h1">Fortune Cookie</span>
                 <button class="navbar-toggler" type="button"s data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                   <span class="navbar-toggler-icon"></span>
@@ -14,13 +14,17 @@
                     <li class="nav-item">
                       <a [routerLink]="['/login']" class="nav-link" href="#">Login <span class="sr-only">(current)</span></a>
                     </li>
+                    <!-- <li class="nav-item">
+                      <a class="nav-link disabled" href="#">Disabled</a>
+                    </li> -->
                   </ul>
                 </div>
               </nav>
               <div style="text-align:left">
                 <br>
-                <div class="d-inline-flex p-2 bd-highlight text-danger bg-light"><h4>Sign in with Google first by Navigating to login</h4></div>
-              </div > -->
+                <div class="d-inline-flex p-2 bd-highlight text-danger bg-light"><h4>Sign in with Google first by Navigating to login ----></h4></div>
+              </div>
+            <p>{{ loggedIn }}</p>
         </div>
 
     <div *ngIf="user">
@@ -42,10 +46,10 @@
                   <a [routerLink]="['/login']" class="nav-link" href="#">Login </a>
                 </li> -->
                 <li class="nav-item">
-                  <a class="nav-link disabled" href="#">User Home<span class="sr-only"> (current)</span></a>
+                  <a [routerLink]="['/userpage']" class="nav-link" href="#">User Home<span class="sr-only"></span></a>
                 </li>
                 <li class="nav-item">
-                  <a [routerLink]="['/userprofile']" class="nav-link" href="#">My Profile<span class="sr-only"></span></a>
+                  <a class="nav-link disabled" href="#">My Profile (current)<span class="sr-only"></span></a>
                 </li>
               </ul>
             </div>
@@ -61,8 +65,8 @@
           </div>>
           <br>
           <div class="container">
-            <div class="d-flex flex-row flex-shrink-0 justify-content-center bg-white">
-              <!-- <div class=" col-lg-6 align-items-center flex-shrink-0 p-3 link-dark text-decoration-none border-bottom">
+            <div class="d-flex flex-row flex-shrink-0 bg-white">
+              <div class=" col-lg-6 align-items-center flex-shrink-0 p-3 link-dark text-decoration-none border-bottom">
                     <h3>My info:</h3>
                     <img src="{{ user.photoUrl }}">
                     <div>
@@ -73,9 +77,9 @@
                     <p>Submitted is {{ submitted }}</p>
                     <p>Lasttime is {{ lasttime }}</p>
                     </div>
-              </div> -->
-              <div class="col-lg-6 align-items-center justify-content-center flex-shrink-0 p-3 link-dark text-decoration-none border-bottom">
-                <h2 style="text-align: center;">Time 'til the next fortune:</h2>
+              </div>
+              <!-- <div class=" col-lg-6 align-items-center flex-shrink-0 p-3 link-dark text-decoration-none border-bottom">
+                <h2>Time 'til the next fortune:</h2>
                 <br>
                 <div class="d-flex justify-content-center">
                     <div class="btn-group-vertical btn-group-lg">
@@ -84,5 +88,6 @@
                         <button type="button" class="btn btn-secondary">Logout</button>
                     </div>
                 </div>
-              </div>
+              </div> -->
+    </div>
 </div>
