@@ -26,7 +26,7 @@ func main() {
 	//testDatabase("small_test.db", "20872307863031084440", "dummy@gmail.com", "maria")
 
 	//*These are here so you can delete any possible rows if need be, restarting the database
-	//clearDatabase("test_fortunes.db")
+	clearDatabase("test_fortunes.db")
 
 	//* Normal Database
 	//opening the test database
