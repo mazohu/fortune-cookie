@@ -3,16 +3,15 @@ package storage
 //TODO: Write package documentation
 
 import (
-	"time"
-	"math/rand"
-	"hash/fnv"
 	"fmt"
+	"hash/fnv"
 	//"log"
+	"math/rand"
+	"time"
 
-	"gorm.io/gorm"
-  	"gorm.io/driver/sqlite"
 	"github.com/davecgh/go-spew/spew"
-
+	"gorm.io/driver/sqlite"
+	"gorm.io/gorm"
 )
 
 var db *gorm.DB
@@ -42,6 +41,7 @@ func InitStorage(file string)() {
 		panic("Failed to connect to the database")
 	}
 	db.AutoMigrate(&User{}, &Fortune{})
+
 	//Seed the random number generator
 	rand.Seed(time.Now().UnixNano())
 	//Populate the fortunes db with default fortunes
@@ -73,6 +73,11 @@ func GetLastFortune() string{
 }
 
 func CheckToday(){
+
+	CurrentUser.Submitted = GetSubmit()
+	CurrentUser.LastTime = GetLastTime()
+	CurrentUser.LastFortune = GetLastFortune()
+
 	if (canSubmit()){
 		CurrentUser.Submitted = false
 		CurrentUser.LastFortune = ""
@@ -159,6 +164,10 @@ func hashFortune(fortune string) (uint32) {
 //Returns whether the CurrentUser has submitted in the last 24-hour period
 func canSubmit()(bool){
 	currentTime := time.Now()
+
+	// log.Println("CHECK TODAY: Our time now is", currentTime.Year(), " ", currentTime.Month(), " ", currentTime.Day())
+	// log.Println("CHECK TODAY: Our lasttime is", CurrentUser.LastTime.Year(), " ", CurrentUser.LastTime.Month(), " ", CurrentUser.LastTime.Day())
+
 	//If the year, month, or day is different, we can have a new fortune! If not, we have the same day as last submitted fortune
 	if (CurrentUser.LastTime.Year() != currentTime.Year() || CurrentUser.LastTime.Month() != currentTime.Month() || CurrentUser.LastTime.Day() != currentTime.Day()) {
 		return true
@@ -167,6 +176,19 @@ func canSubmit()(bool){
 }
 
 //Below are test functions
+
+//Populate the database with the default fortunes
+func testYesterdayUser() {
+	user := User{
+		Username: "Misty", 
+		Email: "alexiar.brownies@gmail.com", 
+		ID: "102694379822418651950",
+		Submitted: true, 
+		LastTime: time.Now().Add(-24 * time.Hour),
+		LastFortune: "You will soon receive a promotion or job offer.",
+	}
+	GetUser(user);
+}
 
 //Resets current user's submitted flag for testing purposes
 func resetUserSubmitted()() {
