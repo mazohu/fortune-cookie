@@ -72,11 +72,22 @@ func GetLastFortune() string{
 	return CurrentUser.LastFortune
 }
 
+func CheckToday(){
+	if (canSubmit()){
+		CurrentUser.Submitted = false
+		CurrentUser.LastFortune = ""
+		db.Model(&CurrentUser).Update("Submitted", false)
+		db.Model(&CurrentUser).Update("LastFortune", "")
+	}
+}
+
 //Updates the fortune database with a fortune only if the user has not yet submitted a fortune
 func SubmitFortune(content string)(error) {
 	fortune := Fortune{ID:hashFortune(content), Content:content}
 	if canSubmit() {
 		db.FirstOrCreate(&fortune, fortune)
+		CurrentUser.Submitted = true
+		CurrentUser.LastTime = time.Now()
 		db.Model(&CurrentUser).Update("Submitted", true)
 		db.Model(&CurrentUser).Update("LastTime", time.Now())
 		db.Where("id = ?", CurrentUser.ID).First(&CurrentUser)
@@ -150,8 +161,6 @@ func canSubmit()(bool){
 	currentTime := time.Now()
 	//If the year, month, or day is different, we can have a new fortune! If not, we have the same day as last submitted fortune
 	if (CurrentUser.LastTime.Year() != currentTime.Year() || CurrentUser.LastTime.Month() != currentTime.Month() || CurrentUser.LastTime.Day() != currentTime.Day()) {
-		CurrentUser.Submitted = true
-		CurrentUser.LastTime = time.Now()
 		return true
 	}
 	return false
