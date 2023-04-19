@@ -26,7 +26,7 @@ func main() {
 	//testDatabase("small_test.db", "20872307863031084440", "dummy@gmail.com", "maria")
 
 	//*These are here so you can delete any possible rows if need be, restarting the database
-	clearDatabase("test_fortunes.db")
+	//clearDatabase("test_fortunes.db")
 
 	//* Normal Database
 	//opening the test database
@@ -67,6 +67,9 @@ func main() {
 
 		//adding to the database, and/or receiving
 		store.GetUser(user)
+
+		//checks to make sure new data can be received. If it can, it updates some info
+		store.CheckToday();
 
 		store.CurrentUser.Submitted = store.GetSubmit()
 		store.CurrentUser.LastTime = store.GetLastTime()
