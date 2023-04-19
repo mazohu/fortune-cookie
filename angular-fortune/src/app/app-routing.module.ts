@@ -8,12 +8,12 @@ import { PastfortunesComponent } from './views/pastfortunes/pastfortunes.compone
 import { UserprofileComponent } from './views/userprofile/userprofile.component';
 
 const routes: Routes = [
-  { path: '', component: HomepageComponent }, //this is homepage
-  { path: 'login', component: LoginComponent },
-  { path: 'userpage', component: UserpageComponent },
-  { path: 'eat-cookie', component:EatcookieComponent},
-  { path: 'pastFortunes', component:PastfortunesComponent},
-  { path: 'userprofile', component:UserprofileComponent}
+  { path: '', component: HomepageComponent, title: 'Fortune Cookie' }, //this is homepage
+  { path: 'login', component: LoginComponent, title: 'Fortune Cookie' },
+  { path: 'userpage', component: UserpageComponent, title: 'Fortune Cookie' },
+  { path: 'eat-cookie', component:EatcookieComponent, title: 'Fortune Cookie'},
+  { path: 'pastFortunes', component:PastfortunesComponent, title: 'Fortune Cookie'},
+  { path: 'userprofile', component:UserprofileComponent, title: 'Fortune Cookie'}
 ];
 
 @NgModule({

@@ -56,7 +56,6 @@ export class UserpageComponent{
         }
       }
     );
-
     this.http.get('http://localhost:8000/api/user/frontend/lastTime').subscribe(
       (data : any) => {
         this.lasttime = data;
@@ -69,4 +68,9 @@ export class UserpageComponent{
       }
     );
   }
+
+  logOut() {
+    this.loggedIn = false;
+  }
 }
+

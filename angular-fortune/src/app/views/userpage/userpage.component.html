@@ -96,7 +96,7 @@
                     <div class="btn-group-vertical btn-group-lg">
                         <button [routerLink]="['/eat-cookie']" type="button" class="btn btn-secondary">Eat a Cookie</button>
                         <button [routerLink]="['/pastFortunes']" type="button" class="btn btn-secondary">View Past Fortunes</button>
-                        <button type="button" class="btn btn-secondary">Logout</button>
+                        <button [routerLink]="['']" (click)="logOut()" type="button" class="btn btn-secondary">Logout</button>
                     </div>
                 </div>
               </div>
