@@ -69,7 +69,7 @@ func main() {
 		store.GetUser(user)
 
 		//checks to make sure new data can be received. If it can, it updates some info
-		store.CheckToday();
+		//store.CheckToday();
 
 		store.CurrentUser.Submitted = store.GetSubmit()
 		store.CurrentUser.LastTime = store.GetLastTime()
