@@ -82,3 +82,17 @@ func TestGetLastTime(t *testing.T) {
 	}
 }
 
+func TestGetLastFortune(t *testing.T) {
+	rand.Seed(time.Now().UnixNano())
+	InitStorage("tests.db")
+	GetUser(User{ID: fmt.Sprintf("%d", rand.Int()+100), Username: "Frankie", Email: "getlastfortune@gmail.com"})
+	t.Logf("CurrentUser is %s", CurrentUser.Username)
+	fortune, err := ReceiveFortune()
+		if err != nil {
+			t.Errorf("Expected to receive fortune but received error %q", err.Error())
+		}
+	t.Logf("Received fortune %q", fortune.Content)
+	if(fortune.Content != GetLastFortune()) {
+		t.Errorf("Expected GetLastFortune to return %s just received but it returned %s", fortune.Content, GetLastFortune())
+	}
+}
