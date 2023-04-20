@@ -23,7 +23,7 @@ npm start
 
 2)
 ```
-cd back-end`
+cd back-end
 go run .
 ```
 
