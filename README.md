@@ -22,8 +22,10 @@ npm start
 
 
 2)
-`cd back-end`
-`go run .`
+```
+cd back-end`
+go run .
+```
 
 Navigate to `localhost:4200` on your we browser of choice and enjoy!
 
