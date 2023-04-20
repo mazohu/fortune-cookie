@@ -50,3 +50,49 @@ func TestReceiveFortune(t *testing.T) {
 	}
 	t.Logf("User fortune history is %+v", received)
 }
+
+func TestGetSubmit(t *testing.T) {
+	rand.Seed(time.Now().UnixNano())
+	InitStorage("tests.db")
+	GetUser(User{ID: fmt.Sprintf("%d", rand.Int()+100), Username: "Catherine", Email: "getsubmit@gmail.com"})
+	t.Logf("CurrentUser is %s", CurrentUser.Username)
+	t.Logf("CurrentUser submitted is %t", CurrentUser.Submitted)
+	if GetSubmit() == true {
+		t.Error("Expected Submitted to be false but it was true")
+	}
+	if err := SubmitFortune(fmt.Sprintf("%s%s wishes you good health and prosperity!", CurrentUser.Username, CurrentUser.ID)); err != nil {
+		t.Errorf("Expected nil error but got %q", err.Error())
+	}
+	if GetSubmit() == false {
+		t.Error("Expected CanSubmit to be true but it was false")
+	}
+}
+
+func TestGetLastTime(t *testing.T) {
+	rand.Seed(time.Now().UnixNano())
+	InitStorage("tests.db")
+	GetUser(User{ID: fmt.Sprintf("%d", rand.Int()+100), Username: "Mac", Email: "getlasttime@gmail.com"})
+	t.Logf("CurrentUser is %s", CurrentUser.Username)
+	if err := SubmitFortune(fmt.Sprintf("%s%s wishes you good health and prosperity!", CurrentUser.Username, CurrentUser.ID)); err != nil {
+		t.Errorf("Expected nil error but got %q", err.Error())
+	}
+	t.Logf("LastTime is %s", CurrentUser.LastTime)
+	if CurrentUser.LastTime != GetLastTime() {
+		t.Errorf("Expected LastTime and GetLastTime to return the same time")
+	}
+}
+
+func TestGetLastFortune(t *testing.T) {
+	rand.Seed(time.Now().UnixNano())
+	InitStorage("tests.db")
+	GetUser(User{ID: fmt.Sprintf("%d", rand.Int()+100), Username: "Frankie", Email: "getlastfortune@gmail.com"})
+	t.Logf("CurrentUser is %s", CurrentUser.Username)
+	fortune, err := ReceiveFortune()
+		if err != nil {
+			t.Errorf("Expected to receive fortune but received error %q", err.Error())
+		}
+	t.Logf("Received fortune %q", fortune.Content)
+	if(fortune.Content != GetLastFortune()) {
+		t.Errorf("Expected GetLastFortune to return %s just received but it returned %s", fortune.Content, GetLastFortune())
+	}
+}

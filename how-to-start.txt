@@ -1,7 +1,8 @@
 Two terminals:
 
 1)  cd angular-fortune
-    ng serve
+    npm install
+    npm start
 
 2)  cd back-end
     go run .
