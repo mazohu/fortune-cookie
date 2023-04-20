@@ -86,10 +86,11 @@
           </div>
         </div>
 
-        <div class="container">
-          <div class="d-flex flex-row flex-shrink-0 justify-content-left bg-white border border-3 border-danger bg-opacity-80 rounded">
-            <div class="col-lg-6 align-items-left justify-content-left flex-shrink-0 p-3 link-dark text-decoration-none border-bottom">
-              <h2 style="text-align: left;">Submit a Fortune</h2>
+        <div class="container justify-content-center">
+          <div class="d-flex flex-row flex-shrink-0 justify-content-center bg-white border border-3 border-danger bg-opacity-80 rounded justify-content-center">
+            <div class="col-lg-6 align-items-left justify-content-center fle/Sx-shrink-0 p-3 link-dark text-decoration-none border-bottom">
+              <!-- <img src="https://i.imgur.com/P3QGdk9.png" alt="Unopened cookie" style="align-items: center; text-align: center;"> -->
+              <h2 style="text-align: center;">Submit a Fortune</h2>
               <br>
               <form (submit)="submit()">
                 <input type="text" class="form-control" placeholder="Submit a Fortune"
@@ -98,7 +99,7 @@
                 <p>You entered: {{newFortune}}</p>
               </form>
               <br>
-              <div *ngIf="submitted">
+              <div style="text-align: center;"*ngIf="submitted">
                 <h2> You can now recieve a fortune! </h2>
                 <br>
                 <button type="button" class="btn btn-primary" (click)="receive()">
@@ -107,7 +108,11 @@
               <br>
               <br>
               <br>
-              <h2>Your new fortune: <h3>{{getFortune}}</h3></h2>
+              <h2 style="text-align: center;">Your new fortune:
+                <br>
+                <br>
+                <h4 style="text-align: center;">{{getFortune}}</h4>
+              </h2>
               </div>
             </div>
           </div>
