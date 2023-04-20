@@ -68,3 +68,17 @@ func TestGetSubmit(t *testing.T) {
 	}
 }
 
+func TestGetLastTime(t *testing.T) {
+	rand.Seed(time.Now().UnixNano())
+	InitStorage("tests.db")
+	GetUser(User{ID: fmt.Sprintf("%d", rand.Int()+100), Username: "Mac", Email: "getlasttime@gmail.com"})
+	t.Logf("CurrentUser is %s", CurrentUser.Username)
+	if err := SubmitFortune(fmt.Sprintf("%s%s wishes you good health and prosperity!", CurrentUser.Username, CurrentUser.ID)); err != nil {
+		t.Errorf("Expected nil error but got %q", err.Error())
+	}
+	t.Logf("LastTime is %s", CurrentUser.LastTime)
+	if CurrentUser.LastTime != GetLastTime() {
+		t.Errorf("Expected LastTime and GetLastTime to return the same time")
+	}
+}
+
