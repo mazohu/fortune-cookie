@@ -13,9 +13,10 @@ Shortly after, you are granted with a fortune of your own, from some other stran
 ## How to Start 🍪
 Open two terminals from the cloned project directory:
 
-1)
-`cd angular-fortune`
+1) `cd angular-fortune`
+<br>
 `npm install`
+<br>
 `npm start`
 
 
