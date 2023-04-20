@@ -50,3 +50,21 @@ func TestReceiveFortune(t *testing.T) {
 	}
 	t.Logf("User fortune history is %+v", received)
 }
+
+func TestGetSubmit(t *testing.T) {
+	rand.Seed(time.Now().UnixNano())
+	InitStorage("tests.db")
+	GetUser(User{ID: fmt.Sprintf("%d", rand.Int()+100), Username: "Catherine", Email: "getsubmit@gmail.com"})
+	t.Logf("CurrentUser is %s", CurrentUser.Username)
+	t.Logf("CurrentUser submitted is %t", CurrentUser.Submitted)
+	if GetSubmit() == true {
+		t.Error("Expected Submitted to be false but it was true")
+	}
+	if err := SubmitFortune(fmt.Sprintf("%s%s wishes you good health and prosperity!", CurrentUser.Username, CurrentUser.ID)); err != nil {
+		t.Errorf("Expected nil error but got %q", err.Error())
+	}
+	if GetSubmit() == false {
+		t.Error("Expected CanSubmit to be true but it was false")
+	}
+}
+
