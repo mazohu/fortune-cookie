@@ -27,7 +27,7 @@ cd back-end
 go run .
 ```
 
-Navigate to `localhost:4200` on your we browser of choice and enjoy!
+Navigate to `http://localhost:4200` on your we browser of choice and enjoy!
 
 
 ## Contributors
